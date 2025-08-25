@@ -7,7 +7,7 @@ const BottomTab = createBottomTabNavigator()
 
 const BottomTabs = () => {
     return(
-        <BottomTab.Navigator>
+        <BottomTab.Navigator screenOptions={{headerShown: false}}>
             <BottomTab.Screen name="Calendar" component={CalendarScreen}/>
             <BottomTab.Screen name="Map" component={MapScreen}/>
             <BottomTab.Screen name="New" component={NewScreen}/>
