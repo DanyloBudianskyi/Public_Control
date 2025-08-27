@@ -1,14 +1,29 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import DrawerNavigator from './src/navigation/Drawer';
-import BottomTabs from './src/navigation/BottomTabs';
+import { createContext, useState } from 'react';
+
+export const ThemeContext = createContext()
+
+const darkTheme = {
+  background: '#121212',
+  text: '#fff',
+}
+const lightTheme = {
+  background: '#fff',
+  text: '#000',
+}
 
 export default function App() {
+  const [isDarkTheme, setIsDarkTheme] = useState(false)
+  const theme = isDarkTheme ? darkTheme : lightTheme
+
   return (
-    <NavigationContainer>
-      <DrawerNavigator/>
-    </NavigationContainer>
+    <ThemeContext.Provider value={{isDarkTheme, setIsDarkTheme, theme}}> 
+      <NavigationContainer>
+        <DrawerNavigator/>
+      </NavigationContainer>
+    </ThemeContext.Provider>
   );
 }
 
