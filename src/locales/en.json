@@ -1,0 +1,11 @@
+{
+    "calendar": "Calendar",
+    "map": "Map",
+    "report": "Report",
+    "language": "Language",
+    "home": "Home",
+    "profile": "Profile",
+    "logout": "Log out",
+    "darkTheme": "Dark theme",
+    "lightTheme": "Light theme"
+}

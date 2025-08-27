@@ -1,14 +1,16 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import CalendarScreen from '../screens/CalendarScreen';
 import MapScreen from '../screens/MapScreen';
-import NewScreen from '../screens/NewScreen';
+import ReportScreen from '../screens/ReportScreen';
 import { useContext } from "react";
 import { ThemeContext } from "../../App";
+import { useTranslation } from 'react-i18next';
 
 const BottomTab = createBottomTabNavigator()
 
 const BottomTabs = () => {
     const {isDarkTheme, theme} = useContext(ThemeContext)
+    const {t} = useTranslation()
 
     return(
         <BottomTab.Navigator 
@@ -21,9 +23,21 @@ const BottomTabs = () => {
                 tabBarInactiveTintColor: isDarkTheme ? '#888' : '#555',
             }}
         >
-            <BottomTab.Screen name="Calendar" component={CalendarScreen}/>
-            <BottomTab.Screen name="Map" component={MapScreen}/>
-            <BottomTab.Screen name="New" component={NewScreen}/>
+            <BottomTab.Screen 
+                name="Calendar" 
+                component={CalendarScreen}
+                options={{tabBarLabel: t('calendar')}}
+                />
+            <BottomTab.Screen 
+                name="Map" 
+                component={MapScreen}
+                options={{tabBarLabel: t('map')}}
+                />
+            <BottomTab.Screen 
+                name="Report" 
+                component={ReportScreen}
+                options={{tabBarLabel: t('report')}}
+                />
         </BottomTab.Navigator>
     )
 }

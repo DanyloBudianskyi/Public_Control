@@ -1,11 +1,11 @@
 import { View, Text } from "react-native";
 
-const NewScreen = () => {
+const ReportScreen = () => {
     return (
         <View>
-            <Text>New screen</Text>
+            <Text>Report screen</Text>
         </View>
     );
 }
 
-export default NewScreen
+export default ReportScreen

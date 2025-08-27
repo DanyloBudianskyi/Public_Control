@@ -1,7 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import DrawerNavigator from './src/navigation/Drawer';
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
+import { loadLanguage } from './src/i18n';
 
 export const ThemeContext = createContext()
 
@@ -16,12 +17,22 @@ const lightTheme = {
 
 export default function App() {
   const [isDarkTheme, setIsDarkTheme] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const theme = isDarkTheme ? darkTheme : lightTheme
+  
+  const initLang = async () => {
+    await loadLanguage()
+    setIsLoading(false)
+  }
+  
+  useEffect(() => {
+    initLang()
+  }, [])
 
   return (
     <ThemeContext.Provider value={{isDarkTheme, setIsDarkTheme, theme}}> 
       <NavigationContainer>
-        <DrawerNavigator/>
+        {!isLoading && <DrawerNavigator/>}
       </NavigationContainer>
     </ThemeContext.Provider>
   );
