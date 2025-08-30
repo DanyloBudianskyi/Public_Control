@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import DrawerNavigator from './src/navigation/Drawer';
 import { createContext, useEffect, useState } from 'react';
 import { loadLanguage } from './src/i18n';
+import { createTable } from './src/database';
 
 export const ThemeContext = createContext()
 
@@ -20,13 +21,14 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true)
   const theme = isDarkTheme ? darkTheme : lightTheme
   
-  const initLang = async () => {
+  const initApp = async () => {
     await loadLanguage()
+    await createTable()
     setIsLoading(false)
   }
   
   useEffect(() => {
-    initLang()
+    initApp()
   }, [])
 
   return (
