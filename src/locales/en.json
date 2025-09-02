@@ -7,5 +7,19 @@
     "profile": "Profile",
     "logout": "Log out",
     "darkTheme": "Dark theme",
-    "lightTheme": "Light theme"
+    "lightTheme": "Light theme",
+    "description": "Description",
+    "descriptionPlaceholder": "Describe violation",
+    "category": "Category",
+    "buttons": {
+        "send": "Send report",
+        "makePhoto": "Take a photo"
+    },
+    "reports": {
+        "noise": "Noise violation",
+        "parking": "Parking violation",
+        "littering": "Littering",
+        "night_noise": "Night-time noise violation",
+        "traffic": "Traffic rules violation"
+    }
 }

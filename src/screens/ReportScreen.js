@@ -4,8 +4,11 @@ import * as ImagePicker from 'expo-image-picker';
 import { fetchReports, insertReport } from "../database";
 import { Picker } from "@react-native-picker/picker";
 import { ThemeContext } from "../../App";
+import { useTranslation } from "react-i18next";
 
 const ReportScreen = () => {
+    const {t} = useTranslation()
+
     const [description, setDescription] = useState("")
     const [category, setCategory] = useState(null)
     const [photoUri, setPhotoUri] = useState(null)
@@ -54,30 +57,30 @@ const ReportScreen = () => {
     return (
         <View style={[styles.container, {backgroundColor: theme.background}]}>
             <View>
-                <Text style={[styles.label, {color: theme.text}]}>Description:</Text>
+                <Text style={[styles.label, {color: theme.text}]}>{t('description')}:</Text>
                 <TextInput
                     value={description}
                     onChangeText={setDescription}
-                    placeholder="Describe violation"
+                    placeholder={t('descriptionPlaceholder')}
                     placeholderTextColor={theme.subText}
                     style={[styles.input, {color: theme.text, borderColor: theme.subText}]}
                 />
 
-                <Text style={[styles.label, {color: theme.text}]}>Category:</Text>
+                <Text style={[styles.label, {color: theme.text}]}>{t('category')}:</Text>
                 <Picker
                     selectedValue={category}
                     onValueChange={(value) => setCategory(value)}
                     style={{color: theme.text}}
                 >
-                    <Picker.Item label="Шумове порушення" value="noise"/>
-                    <Picker.Item label="Порушення правил паркування" value="parking"/>
-                    <Picker.Item label="Забруднення території" value="littering"/>
-                    <Picker.Item label="Порушення тиші в нічний час" value="night_noise"/>
-                    <Picker.Item label="Порушення правил дорожнього руху" value="traffic"/>
+                    <Picker.Item label={t('reports.noise')} value="noise"/>
+                    <Picker.Item label={t('reports.parking')} value="parking"/>
+                    <Picker.Item label={t('reports.littering')} value="littering"/>
+                    <Picker.Item label={t('reports.night_noise')} value="night_noise"/>
+                    <Picker.Item label={t('reports.traffic')} value="traffic"/>
                 </Picker>
 
                 <TouchableOpacity style={[styles.button, {backgroundColor: theme.navigationBackground}]} onPress={pickImage}>
-                    <Text style={{color: theme.text}}>Take a photo</Text>
+                    <Text style={{color: theme.text}}>{t('buttons.makePhoto')}</Text>
                 </TouchableOpacity>
                 {photoUri && 
                     <View style={{alignItems: 'center'}}>
@@ -87,7 +90,7 @@ const ReportScreen = () => {
             </View>
             
             <TouchableOpacity style={[styles.button, {backgroundColor: "#317528ff"}]} onPress={saveReport}>
-                <Text style={{color: theme.text}}>Send report</Text>
+                <Text style={{color: theme.text}}>{t('buttons.send')}</Text>
             </TouchableOpacity>
         </View>
     );
