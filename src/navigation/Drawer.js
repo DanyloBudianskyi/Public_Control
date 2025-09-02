@@ -23,7 +23,7 @@ function CustomDrawerContent(props){
   
   return(
     <DrawerContentScrollView {...props}
-        contentContainerStyle={{backgroundColor: theme.background, flex: 1}}
+        contentContainerStyle={{backgroundColor: theme.navigationBackground, flex: 1}}
     >
         <DrawerItemList {...props}/>
         <View>
@@ -57,7 +57,7 @@ const DrawerNavigator = () => {
         <Drawer.Navigator 
             screenOptions={{
                 headerTitle: '',
-                headerStyle: { backgroundColor: theme.background },
+                headerStyle: { backgroundColor: theme.navigationBackground },
                 headerTintColor: theme.text,
                 drawerActiveTintColor: isDarkTheme ? '#fff' : '#000',
                 drawerInactiveTintColor: isDarkTheme ? '#aaa' : '#444',

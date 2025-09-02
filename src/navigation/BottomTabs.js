@@ -17,7 +17,7 @@ const BottomTabs = () => {
             screenOptions={{
                 headerShown: false,
                 tabBarStyle: {
-                    backgroundColor: theme.background,
+                    backgroundColor: theme.navigationBackground,
                 },
                 tabBarActiveTintColor: theme.text,
                 tabBarInactiveTintColor: isDarkTheme ? '#888' : '#555',

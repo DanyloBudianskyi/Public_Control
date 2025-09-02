@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { View, Text, Linking, TextInput, TouchableOpacity, Image, StyleSheet } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { fetchReports, insertReport } from "../database";
 import { Picker } from "@react-native-picker/picker";
+import { ThemeContext } from "../../App";
 
 const ReportScreen = () => {
     const [description, setDescription] = useState("")
     const [category, setCategory] = useState(null)
     const [photoUri, setPhotoUri] = useState(null)
+
+    const {theme} = useContext(ThemeContext)
 
     const pickImage = async () => {
         const permission = await ImagePicker.requestCameraPermissionsAsync()
@@ -49,20 +52,22 @@ const ReportScreen = () => {
     }
 
     return (
-        <View>
+        <View style={[styles.container, {backgroundColor: theme.background}]}>
             <View>
-                <Text>Description</Text>
+                <Text style={[styles.label, {color: theme.text}]}>Description:</Text>
                 <TextInput
                     value={description}
                     onChangeText={setDescription}
                     placeholder="Describe violation"
+                    placeholderTextColor={theme.subText}
+                    style={[styles.input, {color: theme.text, borderColor: theme.subText}]}
                 />
-            </View>
-            <View>
-                <Text>Category</Text>
+
+                <Text style={[styles.label, {color: theme.text}]}>Category:</Text>
                 <Picker
                     selectedValue={category}
                     onValueChange={(value) => setCategory(value)}
+                    style={{color: theme.text}}
                 >
                     <Picker.Item label="Шумове порушення" value="noise"/>
                     <Picker.Item label="Порушення правил паркування" value="parking"/>
@@ -70,25 +75,57 @@ const ReportScreen = () => {
                     <Picker.Item label="Порушення тиші в нічний час" value="night_noise"/>
                     <Picker.Item label="Порушення правил дорожнього руху" value="traffic"/>
                 </Picker>
-            </View>
-            <View>
-                <TouchableOpacity onPress={pickImage}>
-                    <Text>Take a photo</Text>
+
+                <TouchableOpacity style={[styles.button, {backgroundColor: theme.navigationBackground}]} onPress={pickImage}>
+                    <Text style={{color: theme.text}}>Take a photo</Text>
                 </TouchableOpacity>
-                {photoUri && <Image source={{uri: photoUri}} style={styles.image}/>}
+                {photoUri && 
+                    <View style={{alignItems: 'center'}}>
+                        <Image source={{uri: photoUri}} style={styles.image}/>
+                    </View>
+                }
             </View>
-            <View>
-                <TouchableOpacity onPress={saveReport}>
-                    <Text>Save</Text>
-                </TouchableOpacity>
-                
-            </View>
+            
+            <TouchableOpacity style={[styles.button, {backgroundColor: "#317528ff"}]} onPress={saveReport}>
+                <Text style={{color: theme.text}}>Send report</Text>
+            </TouchableOpacity>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
-    image: { width: 200, height: 200, marginTop: 8 },
+    image: { 
+        width: 200, 
+        height: 200, 
+        marginTop: 8 
+    },
+    container: { 
+        flex: 1, 
+        padding: 16,
+        justifyContent: "space-between"
+    },
+    label: {
+        fontSize: 16, 
+        fontWeight: "bold",
+        marginBottom: 6
+    },
+    input: {
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 10,
+        fontSize: 16,
+        marginBottom: 12,
+    },
+    button: {
+        paddingVertical: 12,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        alignItems: "center",
+        marginTop: 12,
+    },
+    buttonText: {
+
+    }
 });
 
 export default ReportScreen

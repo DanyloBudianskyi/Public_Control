@@ -8,12 +8,16 @@ import { createTable } from './src/database';
 export const ThemeContext = createContext()
 
 const darkTheme = {
-  background: '#121212',
+  background: '#222222ff',
   text: '#fff',
+  navigationBackground: '#121212',
+  subText: '#888'
 }
 const lightTheme = {
-  background: '#fff',
+  background: '#e2e2e2ff',
   text: '#000',
+  navigationBackground: '#fff',
+  subText: '#666'
 }
 
 export default function App() {
