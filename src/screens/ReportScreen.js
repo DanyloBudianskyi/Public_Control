@@ -1,6 +1,7 @@
-import { useContext, useState } from "react";
-import { View, Text, Linking, TextInput, TouchableOpacity, Image, StyleSheet } from "react-native";
+import { useContext, useEffect, useState } from "react";
+import { View, Text, Linking, TextInput, TouchableOpacity, Image, StyleSheet, Button } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
+import * as Location from 'expo-location';
 import { fetchReports, insertReport } from "../database";
 import { Picker } from "@react-native-picker/picker";
 import { ThemeContext } from "../../App";
@@ -12,6 +13,9 @@ const ReportScreen = () => {
     const [description, setDescription] = useState("")
     const [category, setCategory] = useState(null)
     const [photoUri, setPhotoUri] = useState(null)
+    const [fileName, setFileName] = useState('')
+    const [location, setLocation] = useState(null)
+    const [errorMsg, setErrorMsg] = useState(null);
 
     const {theme} = useContext(ThemeContext)
 
@@ -32,26 +36,99 @@ const ReportScreen = () => {
             quality: 0.5,
         })
         if(result.canceled) return
+
+        const asset = result.assets[0]
+
         setPhotoUri(result.assets[0].uri)
+
+        const originalName = asset.fileName || asset.uri.split('/').pop();
+        setFileName(originalName)
+        console.log(originalName)
     }
 
     const saveReport = async () => {
+        console.log("Start")
         if(!description || !category){
             alert("Fill all fields")
+            return
         }
         if(!photoUri){
             alert("Make a photo")
+            return
+        }
+        if (!location) {
+            alert("Location not available yet")
+            return
         }
         const now = new Date()
         const date = now.toISOString().split("T")[0]
         const time = now.toLocaleTimeString()
+        const latitude = location.coords.latitude
+        const longitude = location.coords.longitude
 
-        await insertReport(description, category, date, time, photoUri)
+        console.log("Saving report:", { description, category, date, time, photoUri, latitude, longitude });
 
+        await insertReport(description, category, date, time, photoUri, latitude, longitude)
         setDescription('')
         setCategory(null)
         setPhotoUri(null)
         await fetchReports()
+    }
+
+    const handleUploadImage = async () => {
+        const formData = new FormData();
+
+        const extension = fileName.split('.').pop().toLowerCase();
+        let mimeType = 'image/jpeg'; // default
+
+        if (extension === 'png') mimeType = 'image/png';
+        else if (extension === 'gif') mimeType = 'image/gif';
+        else if (extension === 'heic') mimeType = 'image/heic';
+        else if (extension === 'webp') mimeType = 'image/webp';
+        console.log('mimeType: ', mimeType)
+
+        formData.append('file', {
+            uri: photoUri,
+            name: fileName,
+            type: mimeType
+        })
+        formData.append('upload_preset', 'TestTest');
+
+       try{
+           const response = await fetch(
+               'https://api.cloudinary.com/v1_1/divcq4r4c/upload',
+               {method: 'POST', body: formData}
+           );
+           const data = await response.json();
+           if (data.secure_url){
+               console.log(data.secure_url)
+           }else{
+               console.log(data)
+           }
+       }catch (error){
+           console.log(error)
+       }
+    }
+
+    useEffect(() => {
+        const getCurrentLocation = async () => {
+            const {status} = await Location.requestForegroundPermissionsAsync()
+            if(status !== "granted"){
+                setErrorMsg("Permission to access location was denied")
+                return
+            }
+            const currentLocation = await Location.getCurrentPositionAsync({})
+            setLocation(currentLocation)
+        }
+        getCurrentLocation()
+    }, [])
+
+    if(errorMsg){
+        return(
+            <View>
+                <Text>{errorMsg}</Text>
+            </View>
+        )
     }
 
     return (
@@ -85,11 +162,12 @@ const ReportScreen = () => {
                 {photoUri && 
                     <View style={{alignItems: 'center'}}>
                         <Image source={{uri: photoUri}} style={styles.image}/>
+                        <Button title="Send photo" onPress={handleUploadImage}/>
                     </View>
                 }
             </View>
             
-            <TouchableOpacity style={[styles.button, {backgroundColor: "#317528ff"}]} onPress={saveReport}>
+            <TouchableOpacity style={[styles.button, {backgroundColor: "#439b37ff"}]} onPress={saveReport}>
                 <Text style={{color: theme.text}}>{t('buttons.send')}</Text>
             </TouchableOpacity>
         </View>

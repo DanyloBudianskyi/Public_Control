@@ -15,7 +15,9 @@ export const createTable = async () => {
                 category text not null,
                 date text not null,
                 time text not null,
-                photoUri text not null
+                photoUri text not null,
+                latitude real,
+                longitude real
             );`
         )
         console.log("Table created")
@@ -24,19 +26,21 @@ export const createTable = async () => {
     }
 }
 
-export const insertReport = async (description, category, date, time, photoUri) => {
+export const insertReport = async (description, category, date, time, photoUri, latitude, longitude) => {
     if(!description || !category || !date || !time || !photoUri){
         return
     }
     const database = await openDatabase()
     try{
         const result = await database.runAsync(
-            `insert into reports (description, category, date, time, photoUri) values (?, ?, ?, ?, ?)`,
+            `insert into reports (description, category, date, time, photoUri, latitude, longitude) values (?, ?, ?, ?, ?, ?, ?)`,
             [description,
             category,
             date,
             time,
-            photoUri]
+            photoUri,
+            latitude,
+            longitude]
         )
         console.log("Inserted report id: ", result.lastInsertRowId)
     }catch(error){
