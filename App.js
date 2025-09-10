@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import DrawerNavigator from './src/navigation/Drawer';
-import { createContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { loadLanguage } from './src/i18n';
 import { createTable } from './src/database';
+import AuthProvider, { AuthContext } from './src/context/AuthContext';
+import AuthStack from './src/navigation/AuthStack';
 
 export const ThemeContext = createContext()
 
@@ -29,18 +31,20 @@ export default function App() {
     await loadLanguage()
     await createTable()
     setIsLoading(false)
-  }
+  } 
   
   useEffect(() => {
     initApp()
   }, [])
 
   return (
-    <ThemeContext.Provider value={{isDarkTheme, setIsDarkTheme, theme}}> 
-      <NavigationContainer>
-        {!isLoading && <DrawerNavigator/>}
-      </NavigationContainer>
-    </ThemeContext.Provider>
+    <AuthProvider>
+      <ThemeContext.Provider value={{isDarkTheme, setIsDarkTheme, theme}}> 
+        <NavigationContainer>
+          {!isLoading && <DrawerNavigator/>}
+        </NavigationContainer>
+      </ThemeContext.Provider>
+    </AuthProvider>
   );
 }
 

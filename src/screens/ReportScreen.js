@@ -47,7 +47,6 @@ const ReportScreen = () => {
     }
 
     const saveReport = async () => {
-        console.log("Start")
         if(!description || !category){
             alert("Fill all fields")
             return

@@ -11,6 +11,7 @@
     "description": "Description",
     "descriptionPlaceholder": "Describe violation",
     "category": "Category",
+    "login": "Log in",
     "buttons": {
         "send": "Send report",
         "makePhoto": "Take a photo"

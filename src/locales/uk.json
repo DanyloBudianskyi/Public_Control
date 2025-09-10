@@ -11,6 +11,7 @@
     "description": "Опис",
     "descriptionPlaceholder": "Опишіть порушення",
     "category": "Категорія",
+    "login": "Авторизуватися",
     "buttons": {
         "send": "Надіслати скаргу",
         "makePhoto": "Зробити фото"

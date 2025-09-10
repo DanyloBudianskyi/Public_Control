@@ -1,6 +1,5 @@
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList  } from "@react-navigation/drawer";
 import { View, Text, Switch, TouchableOpacity } from "react-native";
-import BottomTabs from "./BottomTabs";
 import { Picker } from "@react-native-picker/picker";
 import ProfileScreen from "../screens/ProfileScreen";
 import { useContext, useState } from "react";
@@ -8,6 +7,9 @@ import { ThemeContext } from "../../App";
 import { changeLanguage } from "../i18n";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
+import { AuthContext } from "../context/AuthContext";
+import AuthStack from "./AuthStack";
+import BottomTabs from "./BottomTabs";
 
 const Drawer = createDrawerNavigator()
 
@@ -39,7 +41,7 @@ function CustomDrawerContent(props){
                 <Picker.Item label="Українська" value={"uk"}/>
                 <Picker.Item label="English" value={"en"}/>
             </Picker>
-        </View>  
+        </View>
         <View>
             <TouchableOpacity>
                 <Text style={{color: theme.text}}>{t('logout')}</Text>
@@ -51,6 +53,7 @@ function CustomDrawerContent(props){
 
 const DrawerNavigator = () => {
     const {isDarkTheme, theme} = useContext(ThemeContext)
+    const { isLoggedIn } = useContext(AuthContext)
     const {t} = useTranslation()
 
     return(
@@ -69,11 +72,24 @@ const DrawerNavigator = () => {
                 component={BottomTabs}
                 options={{drawerLabel: t('home')}}
             />
-            <Drawer.Screen 
+            {isLoggedIn ? (
+                <>
+                <Drawer.Screen 
                 name="Profile" 
                 component={ProfileScreen}
                 options={{drawerLabel: t('profile')}}
+            /></>
+            ) : (
+                <>
+                <Drawer.Screen 
+                name="Auth" 
+                component={AuthStack}
+                options={{drawerLabel: t('login')}}
             />
+                </>
+            )}
+            
+            
         </Drawer.Navigator>
     )
 }
