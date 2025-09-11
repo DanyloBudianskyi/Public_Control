@@ -6,6 +6,7 @@ import { fetchReports, insertReport } from "../database";
 import { Picker } from "@react-native-picker/picker";
 import { ThemeContext } from "../../App";
 import { useTranslation } from "react-i18next";
+import useCurrentLocation from "../hooks/useCurrentLocation";
 
 const ReportScreen = () => {
     const {t} = useTranslation()
@@ -14,8 +15,7 @@ const ReportScreen = () => {
     const [category, setCategory] = useState(null)
     const [photoUri, setPhotoUri] = useState(null)
     const [fileName, setFileName] = useState('')
-    const [location, setLocation] = useState(null)
-    const [errorMsg, setErrorMsg] = useState(null);
+    const {location, errorMsg, loading} = useCurrentLocation()
 
     const {theme} = useContext(ThemeContext)
 
@@ -109,26 +109,19 @@ const ReportScreen = () => {
        }
     }
 
-    useEffect(() => {
-        const getCurrentLocation = async () => {
-            const {status} = await Location.requestForegroundPermissionsAsync()
-            if(status !== "granted"){
-                setErrorMsg("Permission to access location was denied")
-                return
-            }
-            const currentLocation = await Location.getCurrentPositionAsync({})
-            setLocation(currentLocation)
-        }
-        getCurrentLocation()
-    }, [])
+    // useEffect(() => {
+    //     const getCurrentLocation = async () => {
+    //         const {status} = await Location.requestForegroundPermissionsAsync()
+    //         if(status !== "granted"){
+    //             setErrorMsg("Permission to access location was denied")
+    //             return
+    //         }
+    //         const currentLocation = await Location.getCurrentPositionAsync({})
+    //         setLocation(currentLocation)
+    //     }
+    //     getCurrentLocation()
+    // }, [])
 
-    if(errorMsg){
-        return(
-            <View>
-                <Text>{errorMsg}</Text>
-            </View>
-        )
-    }
 
     return (
         <View style={[styles.container, {backgroundColor: theme.background}]}>
