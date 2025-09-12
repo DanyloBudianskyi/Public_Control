@@ -1,10 +1,12 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { StyleSheet, View, Text, FlatList } from "react-native"
 import Day from "./Day"
 import Header from "./Header"
+import { ThemeContext } from "../../App"
 
 const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date())
+    const {theme} = useContext(ThemeContext)
 
     const generateDays = () => {
         const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
@@ -51,7 +53,7 @@ const Calendar = () => {
                 <Header currentDay={currentDate} setCurrentDay={setCurrentDate}/>
                 <View style={styles.weekDay}>
                         {weekDays.map((day, index) => (
-                    <Text key={index} style={styles.weekdayText}>{day}</Text>
+                    <Text key={index} style={[styles.weekdayText, {color: theme.text}]}>{day}</Text>
                 ))}
                 </View>
                 <FlatList

@@ -1,10 +1,17 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native"
-import { format } from "date-fns"
+import { useContext } from "react"
+import { ThemeContext } from "../../App"
 
 const Day = ({day, isToday, isCurrentMonth}) => {
+    const {theme} = useContext(ThemeContext)
+
     return(
         <TouchableOpacity style={styles.day}>
-            <Text style={[styles.text,isToday ? styles.Today : null, isCurrentMonth ? null : styles.other]}>{day.getDate()}</Text>
+            <Text style={[
+                styles.text,
+                isCurrentMonth ? {color: theme.text} : styles.other,
+                isToday ? styles.Today : null,
+            ]}>{day.getDate()}</Text>
         </TouchableOpacity>
     )
 }
@@ -12,14 +19,15 @@ const Day = ({day, isToday, isCurrentMonth}) => {
 const styles = StyleSheet.create({
     Today: {
         backgroundColor: "#5c5c5c",
-        fontWeight: "800"
+        fontWeight: "800",
+        color: "white"
     },
     day: {
         width: 40,
         height: 40,
         alignItems: 'center',
         justifyContent: 'center',
-        cursor: 'pointer',
+        borderRadius: 20,
     },
     text: {
         padding: 10,

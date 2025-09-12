@@ -10,9 +10,9 @@ import AuthStack from './src/navigation/AuthStack';
 export const ThemeContext = createContext()
 
 const darkTheme = {
-  background: '#222222ff',
+  background: '#313131ff',
   text: '#fff',
-  navigationBackground: '#121212',
+  navigationBackground: '#242424ff',
   subText: '#888'
 }
 const lightTheme = {

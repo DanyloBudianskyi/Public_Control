@@ -1,6 +1,10 @@
+import { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ThemeContext } from "../../App";
 
 const Header = ({currentDay,setCurrentDay}) => {
+    const {theme} = useContext(ThemeContext)
+
     const handlePrevMonth = () => {
         setCurrentDay(new Date(currentDay.getFullYear(), currentDay.getMonth() - 1, 1));
     };
@@ -15,17 +19,17 @@ const Header = ({currentDay,setCurrentDay}) => {
     return(
         <View style={styles.display}>
             <View style={styles.left}>
-                <Text style={styles.text}>{currentDay.toLocaleString("en-US", { month: "long", year: "numeric" })}</Text>
+                <Text style={{color: theme.text}}>{currentDay.toLocaleString("en-US", { month: "long", year: "numeric" })}</Text>
             </View>
             <View style={styles.right}>
                 <TouchableOpacity onPress={handleToday}>
-                    <Text>Today</Text>
+                    <Text style={{color: theme.text}}>Today</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handlePrevMonth}>
-                    <Text>↑</Text>
+                    <Text style={{color: theme.text}}>↑</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleNextMonth}>
-                    <Text>↓</Text>
+                    <Text style={{color: theme.text}}>↓</Text>
                 </TouchableOpacity>
             </View>
             
