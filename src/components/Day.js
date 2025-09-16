@@ -2,11 +2,11 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native"
 import { useContext } from "react"
 import { ThemeContext } from "../../App"
 
-const Day = ({day, isToday, isCurrentMonth}) => {
+const Day = ({day, isToday, isCurrentMonth, onPress}) => {
     const {theme} = useContext(ThemeContext)
 
     return(
-        <TouchableOpacity style={styles.day}>
+        <TouchableOpacity onPress={onPress} style={styles.day}>
             <Text style={[
                 styles.text,
                 isCurrentMonth ? {color: theme.text} : styles.other,

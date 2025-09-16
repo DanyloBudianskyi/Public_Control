@@ -59,3 +59,14 @@ export const fetchReports = async () => {
         return []
     }
 }
+
+export  const fetchReportsByDate = async (date) => {
+    const database = await  openDatabase()
+    try{
+        const rows = await  database.getAllAsync(`select * from reports where date = ?`, [date])
+        return rows
+    }catch (error){
+        console.log("Error: ", error)
+        return []
+    }
+}

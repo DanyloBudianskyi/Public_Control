@@ -3,10 +3,12 @@ import { StyleSheet, View, Text, FlatList } from "react-native"
 import Day from "./Day"
 import Header from "./Header"
 import { ThemeContext } from "../../App"
+import {useNavigation} from "@react-navigation/native";
 
 const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date())
     const {theme} = useContext(ThemeContext)
+    const navigation = useNavigation()
 
     const generateDays = () => {
         const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
@@ -38,6 +40,13 @@ const Calendar = () => {
         return [...prevMonthDays, ...currentMonthDays, ...nextMonthDays]
     }
 
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     const days = generateDays()
 
     const weeks = [];
@@ -63,6 +72,10 @@ const Calendar = () => {
                         day={item} 
                         isToday={item.toDateString() === currentDate.toDateString()}
                         isCurrentMonth={item.getMonth() === currentDate.getMonth()}
+                        onPress={() => {
+                            const formatedDate = formatDate(item)
+                            navigation.navigate("Info", {selectedDate: formatedDate})
+                        }}
                         />
                     )}
                     keyExtractor={(item, index) => index.toString()}
@@ -105,6 +118,5 @@ const styles = StyleSheet.create({
     width: 320,
     },
 })
-
 
 export default Calendar

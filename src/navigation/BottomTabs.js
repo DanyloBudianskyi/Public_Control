@@ -6,6 +6,7 @@ import { useContext } from "react";
 import { ThemeContext } from "../../App";
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
+import CalendarStack from "./CalendarStack";
 
 const BottomTab = createBottomTabNavigator()
 
@@ -27,8 +28,8 @@ const BottomTabs = () => {
             }}
         >
             <BottomTab.Screen 
-                name="Calendar" 
-                component={CalendarScreen}
+                name="CalendarMain"
+                component={CalendarStack}
                 options={{tabBarLabel: t('calendar')}}
                 />
             <BottomTab.Screen 
