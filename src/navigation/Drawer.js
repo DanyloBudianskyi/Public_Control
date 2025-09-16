@@ -10,6 +10,7 @@ import i18next from "i18next";
 import { AuthContext } from "../context/AuthContext";
 import AuthStack from "./AuthStack";
 import BottomTabs from "./BottomTabs";
+import {Dropdown} from "react-native-element-dropdown";
 
 const Drawer = createDrawerNavigator()
 
@@ -38,13 +39,19 @@ function CustomDrawerContent(props){
         </View>
         <View style={[styles.section]}>
             <Text style={[styles.label, {color: theme.text}]}>{t('language')}:</Text>
-            <Picker style={{color: theme.text}}
-              selectedValue={lng}
-              onValueChange={handleLanguageChange}
-            >
-                <Picker.Item label="Українська" value={"uk"}/>
-                <Picker.Item label="English" value={"en"}/>
-            </Picker>
+            <Dropdown
+                style={styles.dropdown}
+                selectedTextStyle={{ color: theme.text }}  // выбранный текст
+                data={[
+                    { label:"Українська", value:"uk" },
+                    { label: 'English', value: 'en' },
+                ]}
+                labelField="label"
+                valueField="value"
+                value={lng}
+                onChange={item => handleLanguageChange(item.value)}
+                placeholder={t('language')}
+            />
         </View>
         <View style={styles.logoutSection}>
             <TouchableOpacity style={styles.logoutBtn}>
@@ -117,17 +124,21 @@ const styles = StyleSheet.create({
     logoutSection: {
         flex: 1,
         justifyContent: "flex-end",
-        borderTopWidth: StyleSheet.hairlineWidth,
-        borderTopColor: "#666",
     },
     logoutBtn: {
         paddingVertical: 10,
-        alignItems: "center", // чтобы текст был по центру
+        alignItems: "center",
     },
     logoutText: {
         fontSize: 16,
         fontWeight: "600",
         color: "#D32F2F"
+    },
+    dropdown: {
+        borderWidth: 1,
+        borderColor: "#666",
+        borderRadius: 8,
+        padding: 8,
     }
 })
 
