@@ -1,9 +1,21 @@
-import { View, Text, StyleSheet } from "react-native";
+import {View, Text, StyleSheet, FlatList} from "react-native";
 import useCurrentLocation from "../hooks/useCurrentLocation";
-import MapView from "react-native-maps";
+import MapView, {Marker} from "react-native-maps";
+import {useEffect, useState} from "react";
+import {fetchReports} from "../database";
 
 const MapScreen = () => {
     const {location, errorMsg, loading} = useCurrentLocation()
+    const [reports, setReports] = useState([])
+
+    useEffect(() => {
+        const fetchData = async  () => {
+            const data = await fetchReports()
+            console.log(data)
+            setReports(data)
+        }
+        fetchData()
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -16,7 +28,11 @@ const MapScreen = () => {
                         latitudeDelta: 0.535,
                         longitudeDelta: 0.535
                     }}
-                />
+                >
+                    {reports.map(item => (
+                        <Marker key={item.id} coordinate={{latitude: item.latitude, longitude: item.longitude}}/>
+                    ))}
+                </MapView>
             )}
         </View>
     );

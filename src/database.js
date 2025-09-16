@@ -6,9 +6,10 @@ export const openDatabase = async () => {
 
 export const createTable = async () => {
     const database = await openDatabase()
+    console.log(SQLite)
     try{
+        await database.execAsync(`PRAGMA journal_mode = WAL;`)
         await database.execAsync(`
-            PRAGMA journal_mode = WAL;
             create table if not exists reports(
                 id integer primary key autoincrement,
                 description text not null,
