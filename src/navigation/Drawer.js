@@ -1,5 +1,5 @@
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList  } from "@react-navigation/drawer";
-import { View, Text, Switch, TouchableOpacity } from "react-native";
+import { View, Text, Switch, TouchableOpacity, StyleSheet } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import ProfileScreen from "../screens/ProfileScreen";
 import { useContext, useState } from "react";
@@ -25,15 +25,19 @@ function CustomDrawerContent(props){
   
   return(
     <DrawerContentScrollView {...props}
-        contentContainerStyle={{backgroundColor: theme.navigationBackground, flex: 1}}
+        contentContainerStyle={{
+            backgroundColor: theme.navigationBackground,
+            flex: 1,
+            paddingVertical: 20
+        }}
     >
         <DrawerItemList {...props}/>
-        <View>
-            <Text style={{color: theme.text}}>{isDarkTheme ? t('darkTheme') : t('lightTheme')}</Text>
+        <View style={[styles.section, styles.row]}>
+            <Text style={[styles.label, {color: theme.text}]}>{isDarkTheme ? t('darkTheme') : t('lightTheme')}</Text>
             <Switch value={isDarkTheme} onValueChange={() => setIsDarkTheme(!isDarkTheme)}/>
         </View>
-        <View>
-            <Text style={{color: theme.text}}>{t('language')}:</Text>
+        <View style={[styles.section]}>
+            <Text style={[styles.label, {color: theme.text}]}>{t('language')}:</Text>
             <Picker style={{color: theme.text}}
               selectedValue={lng}
               onValueChange={handleLanguageChange}
@@ -42,9 +46,9 @@ function CustomDrawerContent(props){
                 <Picker.Item label="English" value={"en"}/>
             </Picker>
         </View>
-        <View>
-            <TouchableOpacity>
-                <Text style={{color: theme.text}}>{t('logout')}</Text>
+        <View style={styles.logoutSection}>
+            <TouchableOpacity style={styles.logoutBtn}>
+                <Text style={styles.logoutText}>{t('logout')}</Text>
             </TouchableOpacity>
         </View>
     </DrawerContentScrollView>
@@ -64,6 +68,7 @@ const DrawerNavigator = () => {
                 headerTintColor: theme.text,
                 drawerActiveTintColor: isDarkTheme ? '#fff' : '#000',
                 drawerInactiveTintColor: isDarkTheme ? '#aaa' : '#444',
+                drawerLabelStyle: {fontSize: 16}
             }} 
             drawerContent={(props) => <CustomDrawerContent {...props}/>}
         >
@@ -93,5 +98,37 @@ const DrawerNavigator = () => {
         </Drawer.Navigator>
     )
 }
+
+const styles = StyleSheet.create({
+    section: {
+        paddingHorizontal: 16,
+        paddingTop: 12,
+
+    },
+    row: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    label: {
+        fontSize: 16,
+        marginBottom: 8,
+    },
+    logoutSection: {
+        flex: 1,
+        justifyContent: "flex-end",
+        borderTopWidth: StyleSheet.hairlineWidth,
+        borderTopColor: "#666",
+    },
+    logoutBtn: {
+        paddingVertical: 10,
+        alignItems: "center", // чтобы текст был по центру
+    },
+    logoutText: {
+        fontSize: 16,
+        fontWeight: "600",
+        color: "#D32F2F"
+    }
+})
 
 export default DrawerNavigator
