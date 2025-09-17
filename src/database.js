@@ -6,7 +6,6 @@ export const openDatabase = async () => {
 
 export const createTable = async () => {
     const database = await openDatabase()
-    console.log(SQLite)
     try{
         await database.execAsync(`PRAGMA journal_mode = WAL;`)
         await database.execAsync(`

@@ -12,8 +12,7 @@ const InfoScreen = () => {
         const loadReports = async () => {
             const data = await fetchReportsByDate(selectedDate);
             setReports(data);
-        };
-        console.log(selectedDate)
+        }
         loadReports();
     }, [selectedDate]);
 

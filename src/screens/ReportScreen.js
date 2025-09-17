@@ -7,17 +7,27 @@ import { Picker } from "@react-native-picker/picker";
 import { ThemeContext } from "../../App";
 import { useTranslation } from "react-i18next";
 import useCurrentLocation from "../hooks/useCurrentLocation";
+import {Dropdown} from "react-native-element-dropdown";
+
+
 
 const ReportScreen = () => {
     const {t} = useTranslation()
+    const {theme} = useContext(ThemeContext)
+
+    const reportData = [
+        { label: t('reports.noise'), value: 'noise' },
+        { label: t('reports.parking'), value: 'parking' },
+        { label: t('reports.littering'), value: 'littering' },
+        { label: t('reports.night_noise'), value: 'night_noise' },
+        { label: t('reports.traffic'), value: 'traffic' },
+    ];
 
     const [description, setDescription] = useState("")
-    const [category, setCategory] = useState(null)
+    const [category, setCategory] = useState(reportData[0].value)
     const [photoUri, setPhotoUri] = useState(null)
     const [fileName, setFileName] = useState('')
     const {location, errorMsg, loading} = useCurrentLocation()
-
-    const {theme} = useContext(ThemeContext)
 
     const pickImage = async () => {
         const permission = await ImagePicker.requestCameraPermissionsAsync()
@@ -31,7 +41,7 @@ const ReportScreen = () => {
                 ]
             );
             return;
-        } 
+        }
         const result = await ImagePicker.launchCameraAsync({
             quality: 0.5,
         })
@@ -109,20 +119,6 @@ const ReportScreen = () => {
        }
     }
 
-    // useEffect(() => {
-    //     const getCurrentLocation = async () => {
-    //         const {status} = await Location.requestForegroundPermissionsAsync()
-    //         if(status !== "granted"){
-    //             setErrorMsg("Permission to access location was denied")
-    //             return
-    //         }
-    //         const currentLocation = await Location.getCurrentPositionAsync({})
-    //         setLocation(currentLocation)
-    //     }
-    //     getCurrentLocation()
-    // }, [])
-
-
     return (
         <View style={[styles.container, {backgroundColor: theme.background}]}>
             <View>
@@ -136,29 +132,34 @@ const ReportScreen = () => {
                 />
 
                 <Text style={[styles.label, {color: theme.text}]}>{t('category')}:</Text>
-                <Picker
-                    selectedValue={category}
-                    onValueChange={(value) => setCategory(value)}
-                    style={{color: theme.text}}
-                >
-                    <Picker.Item label={t('reports.noise')} value="noise"/>
-                    <Picker.Item label={t('reports.parking')} value="parking"/>
-                    <Picker.Item label={t('reports.littering')} value="littering"/>
-                    <Picker.Item label={t('reports.night_noise')} value="night_noise"/>
-                    <Picker.Item label={t('reports.traffic')} value="traffic"/>
-                </Picker>
+
+                <Dropdown
+                    style={{
+                        borderWidth: 1,
+                        borderColor: theme.subText,
+                        borderRadius: 8,
+                        padding: 8,
+                    }}
+                    placeholderStyle={{ color: theme.text }}
+                    selectedTextStyle={{ color: theme.text }}
+                    data={reportData}
+                    labelField="label"
+                    valueField="value"
+                    value={category}
+                    onChange={item => setCategory(item.value)}
+                />
 
                 <TouchableOpacity style={[styles.button, {backgroundColor: theme.navigationBackground}]} onPress={pickImage}>
                     <Text style={{color: theme.text}}>{t('buttons.makePhoto')}</Text>
                 </TouchableOpacity>
-                {photoUri && 
+                {photoUri &&
                     <View style={{alignItems: 'center'}}>
                         <Image source={{uri: photoUri}} style={styles.image}/>
                         <Button title="Send photo" onPress={handleUploadImage}/>
                     </View>
                 }
             </View>
-            
+
             <TouchableOpacity style={[styles.button, {backgroundColor: "#439b37ff"}]} onPress={saveReport}>
                 <Text style={{color: theme.text}}>{t('buttons.send')}</Text>
             </TouchableOpacity>
@@ -167,18 +168,18 @@ const ReportScreen = () => {
 }
 
 const styles = StyleSheet.create({
-    image: { 
-        width: 200, 
-        height: 200, 
-        marginTop: 8 
+    image: {
+        width: 200,
+        height: 200,
+        marginTop: 8
     },
-    container: { 
-        flex: 1, 
+    container: {
+        flex: 1,
         padding: 16,
         justifyContent: "space-between"
     },
     label: {
-        fontSize: 16, 
+        fontSize: 16,
         fontWeight: "bold",
         marginBottom: 6
     },
