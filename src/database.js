@@ -1,8 +1,13 @@
 import * as SQLite from "expo-sqlite"
 
+let database = null;
+
 export const openDatabase = async () => {
-    return await SQLite.openDatabaseAsync('reports.db')
-}
+    if (!database) {
+        database = await SQLite.openDatabaseAsync("reports.db");
+    }
+    return database;
+};
 
 export const createTable = async () => {
     const database = await openDatabase()
@@ -60,12 +65,13 @@ export const fetchReports = async () => {
 }
 
 export  const fetchReportsByDate = async (date) => {
-    const database = await  openDatabase()
-    try{
-        const rows = await  database.getAllAsync(`select * from reports where date = ?`, [date])
-        return rows
-    }catch (error){
-        console.log("Error: ", error)
-        return []
+    if (!date) {
+        return [];
+    }
+    const database = await openDatabase();
+    try {
+        return await database.getAllAsync(`select * from reports where date = ?`, [date]);
+    } catch (error) {
+        return [];
     }
 }
