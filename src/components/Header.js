@@ -1,9 +1,11 @@
 import { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { ThemeContext } from "../../App";
+import {useTranslation} from "react-i18next";
 
 const Header = ({currentDay,setCurrentDay}) => {
     const {theme} = useContext(ThemeContext)
+    const {i18n} = useTranslation()
 
     const handlePrevMonth = () => {
         setCurrentDay(new Date(currentDay.getFullYear(), currentDay.getMonth() - 1, 1));
@@ -19,7 +21,7 @@ const Header = ({currentDay,setCurrentDay}) => {
     return(
         <View style={styles.display}>
             <View style={styles.left}>
-                <Text style={{color: theme.text}}>{currentDay.toLocaleString("en-US", { month: "long", year: "numeric" })}</Text>
+                <Text style={{color: theme.text}}>{currentDay.toLocaleString(i18n.language, { month: "long", year: "numeric" })}</Text>
             </View>
             <View style={styles.right}>
                 <TouchableOpacity onPress={handleToday}>

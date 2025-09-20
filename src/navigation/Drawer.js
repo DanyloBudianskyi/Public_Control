@@ -1,6 +1,5 @@
 import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList  } from "@react-navigation/drawer";
 import { View, Text, Switch, TouchableOpacity, StyleSheet } from "react-native";
-import { Picker } from "@react-native-picker/picker";
 import ProfileScreen from "../screens/ProfileScreen";
 import { useContext, useState } from "react";
 import { ThemeContext } from "../../App";

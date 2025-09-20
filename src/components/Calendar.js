@@ -4,41 +4,50 @@ import Day from "./Day"
 import Header from "./Header"
 import { ThemeContext } from "../../App"
 import {useNavigation} from "@react-navigation/native";
+import {useTranslation} from "react-i18next";
 
 const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date())
     const {theme} = useContext(ThemeContext)
+    const {t} = useTranslation()
     const navigation = useNavigation()
 
-    const generateDays = () => {
-        const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
-        const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
+    const weekDays = t("weekDays" , {returnObjects: true})
+    const firstDayOfWeek = t("firstDayOfWeek");
 
-        const startDayOfWeek = startOfMonth.getDay() || 7
+    const generateDays = () => {
+        const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+        const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+
+        let startDayOfWeek = startOfMonth.getDay();
+
+        if (firstDayOfWeek === 1) {
+            startDayOfWeek = (startDayOfWeek + 6) % 7;
+        }
 
         const prevMonthDays = [];
-        for (let i = startDayOfWeek - 2; i >= 0; i--) {
-            const day = new Date(startOfMonth)
-            day.setDate(day.getDate() - (i + 1))
-            prevMonthDays.push(day)
+        for (let i = startDayOfWeek - 1; i >= 0; i--) {
+            const day = new Date(startOfMonth);
+            day.setDate(day.getDate() - (i + 1));
+            prevMonthDays.push(day);
         }
 
         const currentMonthDays = [];
         for (let i = 0; i < endOfMonth.getDate(); i++) {
-            const day = new Date(startOfMonth)
-            day.setDate(day.getDate() + i)
-            currentMonthDays.push(day)
+            const day = new Date(startOfMonth);
+            day.setDate(day.getDate() + i);
+            currentMonthDays.push(day);
         }
 
         const nextMonthDays = [];
         while (prevMonthDays.length + currentMonthDays.length + nextMonthDays.length < 42) {
-            const day = new Date(endOfMonth)
-            day.setDate(endOfMonth.getDate() + nextMonthDays.length + 1)
-            nextMonthDays.push(day)
+            const day = new Date(endOfMonth);
+            day.setDate(endOfMonth.getDate() + nextMonthDays.length + 1);
+            nextMonthDays.push(day);
         }
 
-        return [...prevMonthDays, ...currentMonthDays, ...nextMonthDays]
-    }
+        return [...prevMonthDays, ...currentMonthDays, ...nextMonthDays];
+    };
 
     const formatDate = (date) => {
         const year = date.getFullYear();
@@ -54,7 +63,6 @@ const Calendar = () => {
         weeks.push(days.slice(i, i + 7));
     }
 
-    const weekDays = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'];
 
     return(
         <View style={styles.container}>

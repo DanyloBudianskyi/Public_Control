@@ -1,15 +1,11 @@
 import { useContext, useEffect, useState } from "react";
 import { View, Text, Linking, TextInput, TouchableOpacity, Image, StyleSheet, Button } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
-import * as Location from 'expo-location';
 import { fetchReports, insertReport } from "../database";
-import { Picker } from "@react-native-picker/picker";
 import { ThemeContext } from "../../App";
 import { useTranslation } from "react-i18next";
 import useCurrentLocation from "../hooks/useCurrentLocation";
 import {Dropdown} from "react-native-element-dropdown";
-
-
 
 const ReportScreen = () => {
     const {t} = useTranslation()
