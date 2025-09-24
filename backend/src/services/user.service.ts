@@ -66,7 +66,8 @@ export class UserService{
 function toUserResponseDto(user: UserDocument, includeEmail = false): UserResponseDto {
     const dto = {
         id: user.id,
-        username: user.username,
+        name: user.name,
+        lastName: user.lastName,
     } as UserResponseDto;
 
     if (includeEmail) {

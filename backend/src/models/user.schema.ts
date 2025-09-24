@@ -3,13 +3,15 @@ import mongoose, {Document, Types} from 'mongoose'
 export interface  UserDocument extends Document{
     _id: Types.ObjectId,
     email: string,
-    username: string,
+    name: string,
+    lastName: string,
     passwordHash: string
 }
 
 const UserSchema = new mongoose.Schema<UserDocument>({
     email: {type: String, required: true, unique: true},
-    username: {type: String, required: true, unique: true, trim: true},
+    name: {type: String, required: true, trim: true},
+    lastName: {type: String, required: true, trim: true},
     passwordHash: {type: String, required: true},
 }, {timestamps: true}
 )
