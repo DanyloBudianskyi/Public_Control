@@ -1,21 +1,21 @@
 import mongoose, {Document, Schema, Types} from "mongoose";
+import {UserDocument} from "./user.schema";
 
 export interface ReportDocument extends Document{
     _id: Types.ObjectId,
     description: string,
     category: string,
     photoUrl: string,
-    date: Date,
-    userId: Schema.Types.ObjectId,
+    userId: Schema.Types.ObjectId | UserDocument,
     latitude: number,
-    longitude: number
+    longitude: number,
+    createdAt: Date,
 }
 
 const ReportSchema = new Schema<ReportDocument>({
     description: {type: String, required: true},
     category: {type: String, required: true},
     photoUrl: {type: String, required: true},
-    date: {type: Date, required: true},
     userId: {type: Schema.Types.ObjectId, ref: "User", required: true},
     latitude: {
         type: Number,
