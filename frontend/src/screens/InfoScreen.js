@@ -2,18 +2,36 @@ import {useRoute} from "@react-navigation/native";
 import {useEffect, useState} from "react";
 import {fetchReportsByDate} from "../database";
 import {FlatList, View, Text, StyleSheet} from "react-native";
+import {getReportsByDate} from "../api/reportApi";
 
 const InfoScreen = () => {
     const route = useRoute()
     const {selectedDate} = route.params
     const [reports, setReports] = useState([])
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const fetchReports = async () => {
+        console.log(selectedDate)
+        try {
+            const response = await getReportsByDate(selectedDate)
+            setReports(response.data)
+            setErrorMessage('')
+        } catch (err) {
+            if (err.response) {
+                const errorMessage = typeof err.response.data === 'string'
+                    ? err.response.data
+                    : err.response.data.message || 'Щось пішло не так';
+                setErrorMessage(`Помилка: ${err.response.status} - ${errorMessage}`);
+
+            }else {
+                setErrorMessage('Непередбачена помилка');
+            }
+            console.log(errorMessage)
+        }
+    }
 
     useEffect(() => {
-        const loadReports = async () => {
-            const data = await fetchReportsByDate(selectedDate);
-            setReports(data);
-        }
-        loadReports();
+        fetchReports()
     }, [selectedDate]);
 
     return(
@@ -29,7 +47,7 @@ const InfoScreen = () => {
                         <View style={styles.reportItem}>
                             <Text>{item.description}</Text>
                             <Text>Category: {item.category}</Text>
-                            <Text>Time: {item.time}</Text>
+                            <Text>Time: {item.createdAt}</Text>
                         </View>
                     )}
                 />

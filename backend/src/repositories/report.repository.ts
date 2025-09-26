@@ -16,6 +16,19 @@ export class ReportRepository{
         return  ReportModel.find({userId}, {__v: 0}).populate("userId", "name lastName").exec();
     }
 
+    async findByDate(date: string): Promise<ReportDocument[]> {
+        const start = new Date(date);
+        start.setHours(0, 0, 0, 0);
+
+        const end = new Date(date);
+        end.setHours(23, 59, 59, 999);
+
+        return ReportModel.find({createdAt: { $gte: start, $lte: end }}, { __v: 0 })
+            .populate("userId", "name lastName")
+            .exec();
+    }
+
+
     async create(dto: CreateReportDto): Promise<ReportDocument>{
         const report = new ReportModel(dto)
         return report.save()

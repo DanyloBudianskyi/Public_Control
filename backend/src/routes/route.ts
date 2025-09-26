@@ -19,6 +19,7 @@ router.delete('/users/:id', validateParams(IdParamDto), ctx => controllerUser.de
 router.get('/reports', ctx => controllerReport.findAll(ctx));
 router.get('/reports/:id', validateParams(IdParamDto), ctx => controllerReport.findOne(ctx));
 router.get('/reports/user/:userId', validateParams(IdParamDto), ctx => controllerReport.findByUser(ctx));
+router.get('/reports/date/:date', ctx => controllerReport.findByDate(ctx));
 router.post('/reports', ctx => controllerReport.create(ctx));
 router.patch('/reports/:id', validateParams(IdParamDto), ctx => controllerReport.update(ctx));
 router.delete('/reports/:id', validateParams(IdParamDto), ctx => controllerReport.delete(ctx));

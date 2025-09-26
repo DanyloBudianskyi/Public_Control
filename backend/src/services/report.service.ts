@@ -29,6 +29,11 @@ export class ReportService {
         return reports.map(toReportResponseDto);
     }
 
+    async findByDate(date: string) {
+        const reports = await this.reportRepository.findByDate(date);
+        return reports.map(toReportResponseDto);
+    }
+
     async create(dto: CreateReportDto): Promise<ReportResponseDto> {
         const report = await this.reportRepository.create(dto);
         return toReportResponseDto(report);

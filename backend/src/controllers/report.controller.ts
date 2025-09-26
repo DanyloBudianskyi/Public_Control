@@ -39,6 +39,16 @@ export class ReportController{
         ctx.body = await this.reportService.findByUserId(userId);
     }
 
+    async findByDate(ctx: Context) {
+        const date  = ctx.params.date;
+
+        if (!date || typeof date !== "string") {
+            ctx.throw(400, "Query param 'day' is required and must be a string (YYYY-MM-DD)");
+        }
+
+        ctx.body = await this.reportService.findByDate(date);
+    }
+
     async update(ctx: Context) {
         const id = ctx.params.id;
         const dto = plainToInstance(UpdateReportDto, ctx.request.body);
