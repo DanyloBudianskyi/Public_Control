@@ -1,12 +1,25 @@
 import { useNavigation } from "@react-navigation/native"
-import { useState } from "react"
+import {useContext, useState} from "react"
 import { Text, TextInput, TouchableOpacity, View } from "react-native"
+import {AuthContext} from "../context/AuthContext";
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const navigation = useNavigation()
+    const {login} = useContext(AuthContext)
 
+    const handlePress = async () => {
+        try {
+            await login(email, password)
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }]
+            })
+        } catch (err) {
+            console.log(err.message || "login failed")
+        }
+    }
     return(
         <View>
             <Text>Login</Text>
@@ -21,7 +34,7 @@ const LoginScreen = () => {
                 onChangeText={setPassword}
                 secureTextEntry
             />
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => handlePress()}>
                 <Text>Log in</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>

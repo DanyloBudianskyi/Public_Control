@@ -3,8 +3,10 @@ import {TYPES} from "../types";
 import {UserRepository} from "../repositories/user.repository";
 import {CreateUserDto, UpdateUserDto, UserResponseDto} from "../dtos/user.dto";
 import {UserDocument} from "../models/user.schema";
-import {ConflictError, NotFoundError} from "../errors/app-err";
+import {ConflictError, NotFoundError, UnauthorizedError} from "../errors/app-err";
 import bcrypt from "bcrypt"
+import jwt from 'jsonwebtoken';
+const SECRET = 'secret123';
 
 @injectable()
 export class UserService{
@@ -21,11 +23,12 @@ export class UserService{
     async create(dto: CreateUserDto){
         try {
             const {password, ...rest} = dto
-            const passwordHash = await  bcrypt.hash(dto.password, 10)
+            const passwordHash = await bcrypt.hash(dto.password, 10)
             const user = await this.userRepository.create({
                 ...rest, passwordHash
             } as any)
-            return toUserResponseDto(user, true)
+            const token = jwt.sign({ id: user._id }, SECRET);
+            return {user: toUserResponseDto(user, true), token}
         } catch (err: any){
             if(err.code === 11000 && err.keyPattern?.email) {
                 throw new ConflictError(`Email "${dto.email}" already exists`)
@@ -60,6 +63,25 @@ export class UserService{
     async deleteById(id: string) {
         const user = await this.userRepository.delete(id);
         if (!user) throw new NotFoundError(`User with id "${id}" not found`);
+    }
+
+    async login(email: string, password: string) {
+        const user = await this.userRepository.findByEmail(email);
+        if (!user) {
+            throw new NotFoundError(`User with email "${email}" not found`);
+        }
+
+        const isValid = await bcrypt.compare(password, user.passwordHash);
+        if (!isValid) {
+            throw new UnauthorizedError("Invalid email or password");
+        }
+
+        const token = jwt.sign({ id: user._id }, SECRET);
+
+        return {
+            user: toUserResponseDto(user, true),
+            token,
+        };
     }
 }
 

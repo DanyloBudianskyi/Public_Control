@@ -1,6 +1,6 @@
 import {Context} from "koa";
 import {plainToInstance} from "class-transformer";
-import {CreateUserDto, UpdateUserDto} from "../dtos/user.dto";
+import {CreateUserDto, LoginUserDto, UpdateUserDto} from "../dtos/user.dto";
 import {validate} from "class-validator";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../types";
@@ -24,6 +24,15 @@ export class UserController {
         }
         ctx.body = await this.userService.create(dto);
         ctx.status = 201;
+    }
+
+    async login(ctx: Context) {
+        const dto = plainToInstance(LoginUserDto, ctx.request.body)
+        const errors = await validate(dto);
+        if (errors.length) {
+            throw new ValidationError("Validation failed", formatValidationErrors(errors));
+        }
+        ctx.body = await this.userService.login(dto.email, dto.password)
     }
 
     async findAll(ctx: Context) {

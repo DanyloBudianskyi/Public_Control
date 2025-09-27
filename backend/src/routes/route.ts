@@ -12,7 +12,6 @@ const controllerUser = container.get<UserController>(TYPES.UserController);
 const controllerReport = container.get<ReportController>(TYPES.ReportController);
 
 router.get('/users', ctx => controllerUser.findAll(ctx));
-router.post('/users', ctx => controllerUser.create(ctx));
 router.patch('/users/:id', validateParams(IdParamDto), ctx => controllerUser.update(ctx));
 router.delete('/users/:id', validateParams(IdParamDto), ctx => controllerUser.delete(ctx));
 
@@ -23,5 +22,8 @@ router.get('/reports/date/:date', ctx => controllerReport.findByDate(ctx));
 router.post('/reports', ctx => controllerReport.create(ctx));
 router.patch('/reports/:id', validateParams(IdParamDto), ctx => controllerReport.update(ctx));
 router.delete('/reports/:id', validateParams(IdParamDto), ctx => controllerReport.delete(ctx));
+
+router.post('/register', ctx => controllerUser.create(ctx));
+router.post('/login', ctx => controllerUser.login(ctx));
 
 export default router;

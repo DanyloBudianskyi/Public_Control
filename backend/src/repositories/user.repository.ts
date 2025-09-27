@@ -14,7 +14,7 @@ export class UserRepository{
 
     async create(dto: CreateUserDto): Promise<UserDocument>{
         const user = new UserModel(dto)
-        return  user.save()
+        return user.save()
     }
 
     async update(id: string, dto: UpdateUserDto): Promise<UserDocument | null>{
