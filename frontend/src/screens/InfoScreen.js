@@ -11,7 +11,6 @@ const InfoScreen = () => {
     const [errorMessage, setErrorMessage] = useState('');
 
     const fetchReports = async () => {
-        console.log(selectedDate)
         try {
             const response = await getReportsByDate(selectedDate)
             setReports(response.data)

@@ -17,6 +17,7 @@ export class ReportController{
 
     async create(ctx: Context) {
         const dto = plainToInstance(CreateReportDto, ctx.request.body);
+        dto.userId = ctx.state.user.id;
         const errors = await validate(dto);
         if (errors.length) {
             throw new ValidationError("Validation failed", formatValidationErrors(errors));

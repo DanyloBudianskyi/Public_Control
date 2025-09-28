@@ -1,11 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import { View, Text, Linking, TextInput, TouchableOpacity, Image, StyleSheet, Button } from "react-native";
+import {View, Text, Linking, TextInput, TouchableOpacity, Image, StyleSheet, Button, Alert} from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { fetchReports, insertReport } from "../database";
 import { ThemeContext } from "../../App";
 import { useTranslation } from "react-i18next";
 import useCurrentLocation from "../hooks/useCurrentLocation";
 import {Dropdown} from "react-native-element-dropdown";
+import {AuthContext} from "../context/AuthContext";
+import axios from "axios";
+import {createReport} from "../api/reportApi";
 
 const ReportScreen = () => {
     const {t} = useTranslation()
@@ -21,9 +24,10 @@ const ReportScreen = () => {
 
     const [description, setDescription] = useState("")
     const [category, setCategory] = useState(reportData[0].value)
-    const [photoUri, setPhotoUri] = useState(null)
+    const [photoUrl, setPhotoUrl] = useState(null)
     const [fileName, setFileName] = useState('')
     const {location, errorMsg, loading} = useCurrentLocation()
+    const {token} = useContext(AuthContext)
 
     const pickImage = async () => {
         const permission = await ImagePicker.requestCameraPermissionsAsync()
@@ -45,7 +49,7 @@ const ReportScreen = () => {
 
         const asset = result.assets[0]
 
-        setPhotoUri(result.assets[0].uri)
+        setPhotoUrl(result.assets[0].uri)
 
         const originalName = asset.fileName || asset.uri.split('/').pop();
         setFileName(originalName)
@@ -57,7 +61,7 @@ const ReportScreen = () => {
             alert("Fill all fields")
             return
         }
-        if(!photoUri){
+        if(!photoUrl){
             alert("Make a photo")
             return
         }
@@ -71,13 +75,52 @@ const ReportScreen = () => {
         const latitude = location.coords.latitude
         const longitude = location.coords.longitude
 
-        console.log("Saving report:", { description, category, date, time, photoUri, latitude, longitude });
+        console.log("Saving report:", { description, category, date, time, photoUrl, latitude, longitude });
 
-        await insertReport(description, category, date, time, photoUri, latitude, longitude)
+        await insertReport(description, category, date, time, photoUrl, latitude, longitude)
         setDescription('')
         setCategory(null)
-        setPhotoUri(null)
+        setPhotoUrl(null)
         await fetchReports()
+    }
+
+    const sendReport = async () => {
+        if(!token){
+            Alert.alert('Помилка', 'Потрібно авторизуватись');
+            console.log(token)
+            return;
+        }
+        if(!description || !category){
+            alert("Fill all fields")
+            return
+        }
+        if(!photoUrl){
+            alert("Make a photo")
+            return
+        }
+        if (!location) {
+            alert("Location not available yet")
+            return
+        }
+        try {
+            const uploadedUrl = await handleUploadImage();
+            if (!uploadedUrl) {
+                alert("Не вдалося завантажити фото");
+                return;
+            }
+
+            const latitude = location.coords.latitude
+            const longitude = location.coords.longitude
+            await createReport(
+                {description, category, photoUrl: uploadedUrl ,latitude, longitude},
+                token
+
+            )
+        } catch (e){
+            console.log("token:", token)
+            console.log(">>>>>>>>>>>", e)
+            Alert.alert('Помилка', 'Не владося створит пост')
+        }
     }
 
     const handleUploadImage = async () => {
@@ -90,10 +133,9 @@ const ReportScreen = () => {
         else if (extension === 'gif') mimeType = 'image/gif';
         else if (extension === 'heic') mimeType = 'image/heic';
         else if (extension === 'webp') mimeType = 'image/webp';
-        console.log('mimeType: ', mimeType)
 
         formData.append('file', {
-            uri: photoUri,
+            uri: photoUrl,
             name: fileName,
             type: mimeType
         })
@@ -106,9 +148,10 @@ const ReportScreen = () => {
            );
            const data = await response.json();
            if (data.secure_url){
-               console.log(data.secure_url)
+               return data.secure_url;
            }else{
                console.log(data)
+               return null
            }
        }catch (error){
            console.log(error)
@@ -148,15 +191,15 @@ const ReportScreen = () => {
                 <TouchableOpacity style={[styles.button, {backgroundColor: theme.navigationBackground}]} onPress={pickImage}>
                     <Text style={{color: theme.text}}>{t('buttons.makePhoto')}</Text>
                 </TouchableOpacity>
-                {photoUri &&
+                {photoUrl &&
                     <View style={{alignItems: 'center'}}>
-                        <Image source={{uri: photoUri}} style={styles.image}/>
+                        <Image source={{uri: photoUrl}} style={styles.image}/>
                         <Button title="Send photo" onPress={handleUploadImage}/>
                     </View>
                 }
             </View>
 
-            <TouchableOpacity style={[styles.button, {backgroundColor: "#439b37ff"}]} onPress={saveReport}>
+            <TouchableOpacity style={[styles.button, {backgroundColor: "#439b37ff"}]} onPress={sendReport}>
                 <Text style={{color: theme.text}}>{t('buttons.send')}</Text>
             </TouchableOpacity>
         </View>

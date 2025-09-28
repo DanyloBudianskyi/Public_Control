@@ -1,4 +1,4 @@
-import { createContext, use, useState } from "react"
+import { createContext, useState } from "react"
 import {Alert} from "react-native";
 import axios from "axios";
 
@@ -39,7 +39,7 @@ const AuthProvider = ({children}) => {
     }
 
     return(
-        <AuthContext.Provider value={{isLoggedIn, user, loading, register, login}}>
+        <AuthContext.Provider value={{isLoggedIn, user, loading, token, register, login}}>
             {children}
         </AuthContext.Provider>
     )
