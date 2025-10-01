@@ -27,4 +27,9 @@ router.delete('/reports/:id', authMiddleware, validateParams(IdParamDto), ctx =>
 router.post('/register', ctx => controllerUser.create(ctx));
 router.post('/login', ctx => controllerUser.login(ctx));
 
+router.get('/ping', (ctx) => {
+    ctx.status = 200;
+    ctx.body = { status: 'ok', time: new Date().toISOString() };
+});
+
 export default router;

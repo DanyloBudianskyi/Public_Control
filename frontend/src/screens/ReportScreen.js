@@ -9,6 +9,7 @@ import {Dropdown} from "react-native-element-dropdown";
 import {AuthContext} from "../context/AuthContext";
 import axios from "axios";
 import {createReport} from "../api/reportApi";
+import {useNavigation} from "@react-navigation/native";
 
 const ReportScreen = () => {
     const {t} = useTranslation()
@@ -28,6 +29,7 @@ const ReportScreen = () => {
     const [fileName, setFileName] = useState('')
     const {location, errorMsg, loading} = useCurrentLocation()
     const {token} = useContext(AuthContext)
+    const navigation = useNavigation()
 
     const pickImage = async () => {
         const permission = await ImagePicker.requestCameraPermissionsAsync()
@@ -116,6 +118,11 @@ const ReportScreen = () => {
                 token
 
             )
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'Home' }]
+            })
+
         } catch (e){
             console.log("token:", token)
             console.log(">>>>>>>>>>>", e)

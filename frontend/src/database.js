@@ -14,7 +14,7 @@ export const createTable = async () => {
     try{
         await database.execAsync(`PRAGMA journal_mode = WAL;`)
         await database.execAsync(`
-            create table if not exists reports(
+                create table if not exists reports(
                 id integer primary key autoincrement,
                 description text not null,
                 category text not null,

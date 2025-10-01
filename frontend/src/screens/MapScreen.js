@@ -3,6 +3,7 @@ import useCurrentLocation from "../hooks/useCurrentLocation";
 import MapView, {Marker} from "react-native-maps";
 import {useEffect, useState} from "react";
 import {fetchReports} from "../database";
+import {getReports} from "../api/reportApi";
 
 const MapScreen = () => {
     const {location, errorMsg, loading} = useCurrentLocation()
@@ -10,9 +11,9 @@ const MapScreen = () => {
 
     useEffect(() => {
         const fetchData = async  () => {
-            const data = await fetchReports()
-            console.log(data)
-            setReports(data)
+            const res = await getReports()
+            console.log(res.data)
+            setReports(res.data)
         }
         fetchData()
     }, []);

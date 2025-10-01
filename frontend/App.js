@@ -4,6 +4,8 @@ import { createContext, useEffect, useState } from 'react';
 import { loadLanguage } from './src/i18n';
 import { createTable } from './src/database';
 import AuthProvider from './src/context/AuthContext';
+import Toast from "react-native-toast-message";
+import ConnectionProvider from "./src/context/ConnectionContext";
 
 export const ThemeContext = createContext()
 
@@ -37,11 +39,14 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <ThemeContext.Provider value={{isDarkTheme, setIsDarkTheme, theme}}> 
-        <NavigationContainer>
-          {!isLoading && <DrawerNavigator/>}
-        </NavigationContainer>
-      </ThemeContext.Provider>
+        <ConnectionProvider>
+            <ThemeContext.Provider value={{isDarkTheme, setIsDarkTheme, theme}}>
+                <NavigationContainer>
+                    {!isLoading && <DrawerNavigator/>}
+                </NavigationContainer>
+                </ThemeContext.Provider>
+            <Toast/>
+        </ConnectionProvider>
     </AuthProvider>
   );
 }
