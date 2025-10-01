@@ -1,7 +1,6 @@
 import {useRoute} from "@react-navigation/native";
 import {useEffect, useState} from "react";
-import {fetchReportsByDate} from "../database";
-import {FlatList, View, Text, StyleSheet} from "react-native";
+import {FlatList, View, Text, StyleSheet, Image} from "react-native";
 import {getReportsByDate} from "../api/reportApi";
 
 const InfoScreen = () => {
@@ -44,6 +43,13 @@ const InfoScreen = () => {
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={({ item }) => (
                         <View style={styles.reportItem}>
+                            {item.photoUrl && (
+                                <Image
+                                    source={{uri: item.photoUrl}}
+                                    style={styles.image}
+                                    resizeMode="cover"
+                                />
+                            )}
                             <Text>{item.description}</Text>
                             <Text>Category: {item.category}</Text>
                             <Text>Time: {item.createdAt}</Text>
@@ -56,9 +62,26 @@ const InfoScreen = () => {
 }
 
 const styles = StyleSheet.create({
-    container: { flex: 1, padding: 16 },
-    title: { fontSize: 18, fontWeight: "bold", marginBottom: 12 },
-    reportItem: { padding: 12, borderBottomWidth: 1, borderColor: "#ccc" },
+    container: {
+        flex: 1,
+        padding: 16
+    },
+    title: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 12
+    },
+    reportItem: {
+        padding: 12,
+        borderBottomWidth: 1,
+        borderColor: "#ccc"
+    },
+    image: {
+        width: "100%",
+        height: 200,
+        borderRadius: 8,
+        marginTop: 8,
+    },
 });
 
 
