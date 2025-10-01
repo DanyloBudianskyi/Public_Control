@@ -55,6 +55,31 @@ const AuthProvider = ({children}) => {
         }
     }
 
+    const logout = async () => {
+        Alert.alert(
+            "Вихід",
+            "Ви дійсно хочете вийти з акаунту?",
+            [
+                {
+                    text: "Скасувати",
+                    style: "cancel"
+                },
+                {
+                    text: "Вийти",
+                    style: 'destructive',
+                    onPress: async () => {
+                        setToken("")
+                        setUser(null)
+                        setIsLoggedIn(false)
+                        await AsyncStorage.removeItem("userToken")
+                        await AsyncStorage.removeItem("userData")
+                    }
+                }
+            ],
+            {cancelable: true}
+        )
+    }
+
     useEffect(() => {
         const loadUser = async () => {
             try {
@@ -77,7 +102,7 @@ const AuthProvider = ({children}) => {
     }, []);
 
     return(
-        <AuthContext.Provider value={{isLoggedIn, user, loading, token, register, login}}>
+        <AuthContext.Provider value={{isLoggedIn, user, loading, token, register, login, logout}}>
             {children}
         </AuthContext.Provider>
     )

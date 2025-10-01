@@ -17,6 +17,7 @@ function CustomDrawerContent(props){
   const {isDarkTheme, toggleTheme, theme} = useContext(ThemeContext)
   const [lng, setLng] = useState(i18next.language)
   const {t} = useTranslation()
+  const {logout, isLoggedIn} = useContext(AuthContext)
 
   const handleLanguageChange = (lang) => {
     setLng(lang)
@@ -52,11 +53,19 @@ function CustomDrawerContent(props){
                 placeholder={t('language')}
             />
         </View>
-        <View style={styles.logoutSection}>
-            <TouchableOpacity style={styles.logoutBtn}>
+        {isLoggedIn &&
+            <View style={styles.logoutSection}>
+            <TouchableOpacity
+                style={styles.logoutBtn}
+                onPress={() => {
+                    logout()
+                    props.navigation.closeDrawer()
+                }
+            }>
                 <Text style={styles.logoutText}>{t('logout')}</Text>
             </TouchableOpacity>
-        </View>
+        </View>}
+
     </DrawerContentScrollView>
   )
 }
