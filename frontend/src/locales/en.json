@@ -24,5 +24,18 @@
         "traffic": "Traffic rules violation"
     },
     "weekDays": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-    "firstDayOfWeek": 0
+    "firstDayOfWeek": 0,
+    "form": {
+      "name": "Name",
+      "lastname": "Last name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm password",
+      "headerLogin": "Login",
+      "buttonLogin": "Log in",
+      "loginLink": "Already have an account?",
+      "headerRegister": "Register",
+      "buttonRegister": "Register",
+      "registerLink": "Don't have an account?"
+    }
 }

@@ -3,8 +3,10 @@ import {useContext, useState} from "react"
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native"
 import {AuthContext} from "../context/AuthContext";
 import {ThemeContext} from  "../context/ThemeContext";
+import {useTranslation} from "react-i18next";
 
 const LoginScreen = () => {
+    const {t} = useTranslation()
     const {theme} = useContext(ThemeContext)
 
     const [email, setEmail] = useState('')
@@ -25,27 +27,27 @@ const LoginScreen = () => {
     }
     return(
         <View style={[styles.container, {backgroundColor: theme.background}]}>
-            <Text style={[styles.header, {color: theme.text}]}>Login</Text>
+            <Text style={[styles.header, {color: theme.text}]}>{t('form.headerLogin')}</Text>
             <TextInput
                 placeholderTextColor={theme.subText}
                 style={[styles.input, {color: theme.text, borderColor: theme.subText}]}
                 value={email} 
-                placeholder="Email" 
+                placeholder={t('form.email')}
                 onChangeText={setEmail}
             />
             <TextInput
                 placeholderTextColor={theme.subText}
                 style={[styles.input, {color: theme.text, borderColor: theme.subText}]}
                 value={password} 
-                placeholder="Password" 
+                placeholder={t('form.password')}
                 onChangeText={setPassword}
                 secureTextEntry
             />
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
-                <Text style={[styles.link, {color: theme.text}]}>Don't have an account? <Text style={styles.linkHighlight}>Register</Text></Text>
+                <Text style={[styles.link, {color: theme.text}]}>{t('form.registerLink')} <Text style={styles.linkHighlight}>{t('form.buttonRegister')}</Text></Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, {backgroundColor: "#439b37ff"}]} onPress={() => handlePress()}>
-                <Text>Log in</Text>
+                <Text>{t('form.buttonLogin')}</Text>
             </TouchableOpacity>
         </View>
     )

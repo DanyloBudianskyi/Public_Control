@@ -24,5 +24,18 @@
         "traffic": "Порушення правил дорожнього руху"
     },
     "weekDays": ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"],
-    "firstDayOfWeek": 1
+    "firstDayOfWeek": 1,
+    "form": {
+      "name": "Ім'я",
+      "lastname": "Прізвище",
+      "email": "Пошта",
+      "password": "Пароль",
+      "confirmPassword": "Підтвердіть пароль",
+      "headerLogin": "Вхід",
+      "buttonLogin": "Увійти",
+      "loginLink": "Вже є акаунт?",
+      "headerRegister": "Реєстрація",
+      "buttonRegister": "Зареєструватися",
+      "registerLink": "Не має акаунту?"
+    }
 }

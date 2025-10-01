@@ -201,7 +201,6 @@ const ReportScreen = () => {
                 {photoUrl &&
                     <View style={{alignItems: 'center'}}>
                         <Image source={{uri: photoUrl}} style={styles.image}/>
-                        <Button title="Send photo" onPress={handleUploadImage}/>
                     </View>
                 }
             </View>

@@ -3,8 +3,10 @@ import {useContext, useState} from "react"
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native"
 import {AuthContext} from "../context/AuthContext";
 import {ThemeContext} from  "../context/ThemeContext";
+import {useTranslation} from "react-i18next";
 
 const RegisterScreen = () => {
+    const {t} = useTranslation()
     const {theme} = useContext(ThemeContext)
 
     const [name, setName] = useState('')
@@ -32,34 +34,34 @@ const RegisterScreen = () => {
 
     return(
         <View style={[styles.container, {backgroundColor: theme.background}]}>
-            <Text style={[styles.header, {color: theme.text}]}>Register</Text>
+            <Text style={[styles.header, {color: theme.text}]}>{t('form.headerRegister')}</Text>
             <TextInput
                 placeholderTextColor={theme.subText}
                 style={[styles.input, {color: theme.text, borderColor: theme.subText}]}
                 value={name}
                 onChangeText={setName}
-                placeholder="Your name"
+                placeholder={t('form.name')}
             />
             <TextInput
                 placeholderTextColor={theme.subText}
                 style={[styles.input, {color: theme.text, borderColor: theme.subText}]}
                 value={lastName}
                 onChangeText={setLastName}
-                placeholder="Your lastname"
+                placeholder={t('form.lastname')}
             />
             <TextInput
                 placeholderTextColor={theme.subText}
                 style={[styles.input, {color: theme.text, borderColor: theme.subText}]}
                 value={email} 
                 onChangeText={setEmail} 
-                placeholder="Email"
+                placeholder={t('form.email')}
             />
             <TextInput
                 placeholderTextColor={theme.subText}
                 style={[styles.input, {color: theme.text, borderColor: theme.subText}]}
                 value={password} 
                 onChangeText={setPassword} 
-                placeholder="Password" 
+                placeholder={t('form.password')}
                 secureTextEntry
             />
             <TextInput
@@ -67,14 +69,14 @@ const RegisterScreen = () => {
                 style={[styles.input, {color: theme.text, borderColor: theme.subText}]}
                 value={confirm} 
                 onChangeText={setConfirm} 
-                placeholder="Confirm password" 
+                placeholder={t('form.confirmPassword')}
                 secureTextEntry
             />
             <TouchableOpacity onPress={() => navigation.replace('Login')}>
-                <Text style={[styles.link, {color: theme.text}]}>Already have an account? <Text style={styles.linkHighlight}>Log in</Text></Text>
+                <Text style={[styles.link, {color: theme.text}]}>{t('form.loginLink')} <Text style={styles.linkHighlight}>{t('form.buttonLogin')}</Text></Text>
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button, {backgroundColor: "#439b37ff"}]} onPress={() => handlePress()}>
-                <Text>Register</Text>
+                <Text>{t('form.buttonRegister')}</Text>
             </TouchableOpacity>
         </View>
     )
