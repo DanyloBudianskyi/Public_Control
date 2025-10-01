@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import {View, Text, Linking, TextInput, TouchableOpacity, Image, StyleSheet, Button, Alert} from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import { fetchReports, insertReport } from "../database";
-import { ThemeContext } from "../../App";
+import {ThemeContext} from  "../context/ThemeContext"
 import { useTranslation } from "react-i18next";
 import useCurrentLocation from "../hooks/useCurrentLocation";
 import {Dropdown} from "react-native-element-dropdown";

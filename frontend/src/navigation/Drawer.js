@@ -2,7 +2,7 @@ import { createDrawerNavigator, DrawerContentScrollView, DrawerItemList  } from 
 import { View, Text, Switch, TouchableOpacity, StyleSheet } from "react-native";
 import ProfileScreen from "../screens/ProfileScreen";
 import { useContext, useState } from "react";
-import { ThemeContext } from "../../App";
+import {ThemeContext} from  "../context/ThemeContext";
 import { changeLanguage } from "../i18n";
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
@@ -14,7 +14,7 @@ import {Dropdown} from "react-native-element-dropdown";
 const Drawer = createDrawerNavigator()
 
 function CustomDrawerContent(props){
-  const {isDarkTheme, setIsDarkTheme, theme} = useContext(ThemeContext)
+  const {isDarkTheme, toggleTheme, theme} = useContext(ThemeContext)
   const [lng, setLng] = useState(i18next.language)
   const {t} = useTranslation()
 
@@ -34,7 +34,7 @@ function CustomDrawerContent(props){
         <DrawerItemList {...props}/>
         <View style={[styles.section, styles.row]}>
             <Text style={[styles.label, {color: theme.text}]}>{isDarkTheme ? t('darkTheme') : t('lightTheme')}</Text>
-            <Switch value={isDarkTheme} onValueChange={() => setIsDarkTheme(!isDarkTheme)}/>
+            <Switch value={isDarkTheme} onValueChange={() => toggleTheme()}/>
         </View>
         <View style={[styles.section]}>
             <Text style={[styles.label, {color: theme.text}]}>{t('language')}:</Text>

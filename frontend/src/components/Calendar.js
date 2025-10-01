@@ -2,7 +2,7 @@ import { useContext, useState } from "react"
 import { StyleSheet, View, Text, FlatList } from "react-native"
 import Day from "./Day"
 import Header from "./Header"
-import { ThemeContext } from "../../App"
+import {ThemeContext} from  "../context/ThemeContext"
 import {useNavigation} from "@react-navigation/native";
 import {useTranslation} from "react-i18next";
 

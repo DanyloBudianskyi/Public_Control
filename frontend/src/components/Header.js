@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { ThemeContext } from "../../App";
+import {ThemeContext} from  "../context/ThemeContext"
 import {useTranslation} from "react-i18next";
 
 const Header = ({currentDay,setCurrentDay}) => {

@@ -2,6 +2,7 @@ import { useNavigation } from "@react-navigation/native"
 import {useContext, useState} from "react"
 import { Text, TextInput, TouchableOpacity, View } from "react-native"
 import {AuthContext} from "../context/AuthContext";
+import {ThemeContext} from  "../context/ThemeContext";
 
 const LoginScreen = () => {
     const [email, setEmail] = useState('')

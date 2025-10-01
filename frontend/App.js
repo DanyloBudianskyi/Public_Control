@@ -6,6 +6,7 @@ import { createTable } from './src/database';
 import AuthProvider from './src/context/AuthContext';
 import Toast from "react-native-toast-message";
 import ConnectionProvider from "./src/context/ConnectionContext";
+import ThemeProvider from "./src/context/ThemeContext";
 
 export const ThemeContext = createContext()
 
@@ -40,11 +41,11 @@ export default function App() {
   return (
     <AuthProvider>
         <ConnectionProvider>
-            <ThemeContext.Provider value={{isDarkTheme, setIsDarkTheme, theme}}>
+            <ThemeProvider>
                 <NavigationContainer>
                     {!isLoading && <DrawerNavigator/>}
                 </NavigationContainer>
-                </ThemeContext.Provider>
+                </ThemeProvider>
             <Toast/>
         </ConnectionProvider>
     </AuthProvider>

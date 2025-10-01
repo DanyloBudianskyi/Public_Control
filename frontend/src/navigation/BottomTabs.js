@@ -3,7 +3,7 @@ import CalendarScreen from '../screens/CalendarScreen';
 import MapScreen from '../screens/MapScreen';
 import ReportScreen from '../screens/ReportScreen';
 import { useContext } from "react";
-import { ThemeContext } from "../../App";
+import {ThemeContext} from  "../context/ThemeContext";
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
 import CalendarStack from "./CalendarStack";

@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TouchableOpacity } from "react-native"
 import { useContext } from "react"
-import { ThemeContext } from "../../App"
+import {ThemeContext} from  "../context/ThemeContext"
 
 const Day = ({day, isToday, isCurrentMonth, onPress}) => {
     const {theme} = useContext(ThemeContext)
