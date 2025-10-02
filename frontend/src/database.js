@@ -45,6 +45,7 @@ export const insertReport = async (description, category, photoBase64, latitude,
             longitude]
         )
         console.log("Inserted report id: ", result.lastInsertRowId)
+        return(result.lastInsertRowId)
     }catch(error){
         console.log("Error: ", error)
     }

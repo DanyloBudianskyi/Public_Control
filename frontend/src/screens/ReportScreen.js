@@ -60,12 +60,10 @@ const ReportScreen = () => {
         const asset = result.assets[0]
 
         setPhotoUrl(result.assets[0].uri)
-        console.log(result)
         setPhotoBase64(asset.base64)
     }
 
     const sendReport = async () => {
-        console.log("start")
         if(!token){
             Alert.alert('Помилка', 'Потрібно авторизуватись');
             console.log(token)
@@ -86,7 +84,7 @@ const ReportScreen = () => {
         const latitude = location.coords.latitude
         const longitude = location.coords.longitude
         try {
-            await insertReport(description, category, photoBase64, latitude, longitude)
+            const localReportId = await insertReport(description, category, photoBase64, latitude, longitude);
             if(isConnected && backendAvailable && token){
                 const uploadedUrl = await handleUploadImage(photoBase64, generateFileName());
                 if (!uploadedUrl) {
@@ -97,8 +95,9 @@ const ReportScreen = () => {
                 await createReport(
                     {description, category, photoUrl: uploadedUrl ,latitude, longitude},
                     token
-
                 )
+
+                await markReportAsSynced(localReportId);
             }
 
             setDescription('');
