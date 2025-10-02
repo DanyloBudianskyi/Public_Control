@@ -12,6 +12,8 @@
     "descriptionPlaceholder": "Describe violation",
     "category": "Category",
     "login": "Log in",
+    "time": "Time",
+    "createdBy": "Created by",
     "buttons": {
         "send": "Send report",
         "makePhoto": "Take a photo"

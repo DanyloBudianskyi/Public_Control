@@ -2,8 +2,10 @@ import {useRoute} from "@react-navigation/native";
 import {useEffect, useState} from "react";
 import {FlatList, View, Text, StyleSheet, Image} from "react-native";
 import {getReportsByDate} from "../api/reportApi";
+import {useTranslation} from "react-i18next";
 
 const InfoScreen = () => {
+    const {t} = useTranslation()
     const route = useRoute()
     const {selectedDate} = route.params
     const [reports, setReports] = useState([])
@@ -51,8 +53,9 @@ const InfoScreen = () => {
                                 />
                             )}
                             <Text>{item.description}</Text>
-                            <Text>Category: {item.category}</Text>
-                            <Text>Time: {item.createdAt}</Text>
+                            <Text>{t('category')}: {t(`reports.${item.category}`)}</Text>
+                            <Text>{t('time')}: {new Date(item.createdAt).toLocaleString()}</Text>
+                            <Text>{t('createdBy')}: {item.user.lastName} {item.user.name}</Text>
                         </View>
                     )}
                 />
@@ -78,7 +81,7 @@ const styles = StyleSheet.create({
     },
     image: {
         width: "100%",
-        height: 200,
+        height: 300,
         borderRadius: 8,
         marginTop: 8,
     },

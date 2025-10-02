@@ -12,6 +12,8 @@
     "descriptionPlaceholder": "Опишіть порушення",
     "category": "Категорія",
     "login": "Авторизуватися",
+    "time": "Час",
+    "createdBy": "Створено",
     "buttons": {
         "send": "Надіслати скаргу",
         "makePhoto": "Зробити фото"
