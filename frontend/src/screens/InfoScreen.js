@@ -1,8 +1,9 @@
 import {useRoute} from "@react-navigation/native";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {FlatList, View, Text, StyleSheet, Image} from "react-native";
 import {getReportsByDate} from "../api/reportApi";
 import {useTranslation} from "react-i18next";
+import {ThemeContext} from "../context/ThemeContext";
 
 const InfoScreen = () => {
     const {t} = useTranslation()
@@ -10,6 +11,7 @@ const InfoScreen = () => {
     const {selectedDate} = route.params
     const [reports, setReports] = useState([])
     const [errorMessage, setErrorMessage] = useState('');
+    const {theme} = useContext(ThemeContext)
 
     const fetchReports = async () => {
         try {
@@ -35,8 +37,8 @@ const InfoScreen = () => {
     }, [selectedDate]);
 
     return(
-        <View style={styles.container}>
-            <Text style={styles.title}>Reports for {selectedDate}</Text>
+        <View style={[styles.container, {backgroundColor: theme.background}]}>
+            <Text style={[styles.title, {color: theme.text}]}>{t('reportFor')} {selectedDate}</Text>
             {reports.length === 0 ? (
                 <Text>No reports for this day.</Text>
             ) : (
@@ -52,10 +54,10 @@ const InfoScreen = () => {
                                     resizeMode="cover"
                                 />
                             )}
-                            <Text>{item.description}</Text>
-                            <Text>{t('category')}: {t(`reports.${item.category}`)}</Text>
-                            <Text>{t('time')}: {new Date(item.createdAt).toLocaleString()}</Text>
-                            <Text>{t('createdBy')}: {item.user.lastName} {item.user.name}</Text>
+                            <Text style={[styles.description, { color: theme.text }]}>{item.description}</Text>
+                            <Text style={[styles.meta, { color: theme.subText }]}>{t('category')}: {t(`reports.${item.category}`)}</Text>
+                            <Text style={[styles.meta, { color: theme.subText }]}>{t('time')}: {new Date(item.createdAt).toLocaleString()}</Text>
+                            <Text style={[styles.meta, { color: theme.subText }]}>{t('createdBy')}: {item.user.lastName} {item.user.name}</Text>
                         </View>
                     )}
                 />
@@ -84,6 +86,16 @@ const styles = StyleSheet.create({
         height: 300,
         borderRadius: 8,
         marginTop: 8,
+    },
+    description: {
+        fontSize: 16,
+        fontWeight: "600",
+        marginBottom: 6
+    },
+    meta: {
+        fontSize: 14,
+        fontStyle: "italic",
+        marginBottom: 4
     },
 });
 
