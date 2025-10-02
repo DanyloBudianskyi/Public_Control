@@ -1,4 +1,5 @@
 import {injectable} from "inversify";
+import { DateTime } from 'luxon';
 import {ReportDocument, ReportModel} from "../models/report.schema";
 import {CreateReportDto, UpdateReportDto} from "../dtos/report.dto";
 
@@ -17,13 +18,12 @@ export class ReportRepository{
     }
 
     async findByDate(date: string): Promise<ReportDocument[]> {
-        const start = new Date(date);
-        start.setHours(0, 0, 0, 0);
+        const mtStart = DateTime.fromISO(date, { zone: 'America/Denver' }).startOf('day').toUTC();
+        const mtEnd = DateTime.fromISO(date, { zone: 'America/Denver' }).endOf('day').toUTC();
 
-        const end = new Date(date);
-        end.setHours(23, 59, 59, 999);
-
-        return ReportModel.find({createdAt: { $gte: start, $lte: end }}, { __v: 0 })
+        return ReportModel.find({
+            createdAt: { $gte: mtStart.toJSDate(), $lte: mtEnd.toJSDate() }
+        }, { __v: 0 })
             .populate("userId", "name lastName")
             .exec();
     }
