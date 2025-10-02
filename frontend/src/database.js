@@ -18,9 +18,8 @@ export const createTable = async () => {
                 id integer primary key autoincrement,
                 description text not null,
                 category text not null,
-                date text not null,
-                time text not null,
-                photoUri text not null,
+                photoBase64 text not null,
+                synced integer default 0,
                 latitude real,
                 longitude real
             );`
@@ -31,19 +30,17 @@ export const createTable = async () => {
     }
 }
 
-export const insertReport = async (description, category, date, time, photoUri, latitude, longitude) => {
-    if(!description || !category || !date || !time || !photoUri){
+export const insertReport = async (description, category, photoBase64, latitude, longitude) => {
+    if(!description || !category || !photoBase64){
         return
     }
     const database = await openDatabase()
     try{
         const result = await database.runAsync(
-            `insert into reports (description, category, date, time, photoUri, latitude, longitude) values (?, ?, ?, ?, ?, ?, ?)`,
+            `insert into reports (description, category, photoBase64, synced ,latitude, longitude) values (?, ?, ?, 0, ?, ?)`,
             [description,
             category,
-            date,
-            time,
-            photoUri,
+            photoBase64,
             latitude,
             longitude]
         )
@@ -64,14 +61,23 @@ export const fetchReports = async () => {
     }
 }
 
-export  const fetchReportsByDate = async (date) => {
-    if (!date) {
-        return [];
-    }
-    const database = await openDatabase();
+export const fetchUnsyncedReports = async () => {
+    const db = await openDatabase();
     try {
-        return await database.getAllAsync(`select * from reports where date = ?`, [date]);
+        const rows = await db.getAllAsync(`SELECT * FROM reports WHERE synced = 0`);
+        return rows;
     } catch (error) {
+        console.log("Error fetching unsynced reports:", error);
         return [];
     }
-}
+};
+
+export const markReportAsSynced = async (id) => {
+    const db = await openDatabase();
+    try {
+        await db.runAsync(`UPDATE reports SET synced = 1 WHERE id = ?`, [id]);
+        console.log("Report marked as synced:", id);
+    } catch (error) {
+        console.log("Error marking report as synced:", error);
+    }
+};

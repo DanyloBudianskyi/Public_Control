@@ -12,6 +12,7 @@ const ConnectionProvider = ({children}) => {
     useEffect(() => {
         const checkConnection = async () => {
             const state = await NetInfo.fetch()
+            setIsConnected(state.isConnected)
             if(!state){
                 Toast.show({
                     type: "error",

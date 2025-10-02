@@ -1,15 +1,21 @@
 import { useContext, useEffect, useState } from "react";
 import {View, Text, Linking, TextInput, TouchableOpacity, Image, StyleSheet, Button, Alert} from "react-native";
 import * as ImagePicker from 'expo-image-picker';
-import { fetchReports, insertReport } from "../database";
+import {fetchReports, fetchUnsyncedReports, insertReport, markReportAsSynced} from "../database";
 import {ThemeContext} from  "../context/ThemeContext"
 import { useTranslation } from "react-i18next";
 import useCurrentLocation from "../hooks/useCurrentLocation";
 import {Dropdown} from "react-native-element-dropdown";
 import {AuthContext} from "../context/AuthContext";
-import axios from "axios";
 import {createReport} from "../api/reportApi";
 import {useNavigation} from "@react-navigation/native";
+import {ConnectionContext} from "../context/ConnectionContext";
+
+const generateFileName = () => {
+    const timestamp = Date.now();
+    const random = Math.floor(Math.random() * 1000);
+    return `photo_${timestamp}_${random}.jpg`;
+};
 
 const ReportScreen = () => {
     const {t} = useTranslation()
@@ -26,9 +32,10 @@ const ReportScreen = () => {
     const [description, setDescription] = useState("")
     const [category, setCategory] = useState(reportData[0].value)
     const [photoUrl, setPhotoUrl] = useState(null)
-    const [fileName, setFileName] = useState('')
+    const [photoBase64, setPhotoBase64] = useState(null);
     const {location, errorMsg, loading} = useCurrentLocation()
     const {token} = useContext(AuthContext)
+    const {isConnected, backendAvailable} = useContext(ConnectionContext)
     const navigation = useNavigation()
 
     const pickImage = async () => {
@@ -46,47 +53,19 @@ const ReportScreen = () => {
         }
         const result = await ImagePicker.launchCameraAsync({
             quality: 0.5,
+            base64: true
         })
         if(result.canceled) return
 
         const asset = result.assets[0]
 
         setPhotoUrl(result.assets[0].uri)
-
-        const originalName = asset.fileName || asset.uri.split('/').pop();
-        setFileName(originalName)
-        console.log(originalName)
-    }
-
-    const saveReport = async () => {
-        if(!description || !category){
-            alert("Fill all fields")
-            return
-        }
-        if(!photoUrl){
-            alert("Make a photo")
-            return
-        }
-        if (!location) {
-            alert("Location not available yet")
-            return
-        }
-        const now = new Date()
-        const date = now.toISOString().split("T")[0]
-        const time = now.toLocaleTimeString()
-        const latitude = location.coords.latitude
-        const longitude = location.coords.longitude
-
-        console.log("Saving report:", { description, category, date, time, photoUrl, latitude, longitude });
-
-        await insertReport(description, category, date, time, photoUrl, latitude, longitude)
-        setDescription('')
-        setCategory(null)
-        setPhotoUrl(null)
-        await fetchReports()
+        console.log(result)
+        setPhotoBase64(asset.base64)
     }
 
     const sendReport = async () => {
+        console.log("start")
         if(!token){
             Alert.alert('Помилка', 'Потрібно авторизуватись');
             console.log(token)
@@ -96,7 +75,7 @@ const ReportScreen = () => {
             alert("Fill all fields")
             return
         }
-        if(!photoUrl){
+        if(!photoBase64){
             alert("Make a photo")
             return
         }
@@ -104,20 +83,29 @@ const ReportScreen = () => {
             alert("Location not available yet")
             return
         }
+        const latitude = location.coords.latitude
+        const longitude = location.coords.longitude
         try {
-            const uploadedUrl = await handleUploadImage();
-            if (!uploadedUrl) {
-                alert("Не вдалося завантажити фото");
-                return;
+            await insertReport(description, category, photoBase64, latitude, longitude)
+            if(isConnected && backendAvailable && token){
+                const uploadedUrl = await handleUploadImage(photoBase64, generateFileName());
+                if (!uploadedUrl) {
+                    alert("Не вдалося завантажити фото");
+                    return;
+                }
+
+                await createReport(
+                    {description, category, photoUrl: uploadedUrl ,latitude, longitude},
+                    token
+
+                )
             }
 
-            const latitude = location.coords.latitude
-            const longitude = location.coords.longitude
-            await createReport(
-                {description, category, photoUrl: uploadedUrl ,latitude, longitude},
-                token
+            setDescription('');
+            setCategory(reportData[0].value);
+            setPhotoUrl(null);
+            setPhotoBase64(null);
 
-            )
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Home' }]
@@ -130,11 +118,11 @@ const ReportScreen = () => {
         }
     }
 
-    const handleUploadImage = async () => {
+    const handleUploadImage = async (base64Data, fileNameParam) => {
         const formData = new FormData();
+        const extension = (fileNameParam || 'photo.jpg').split('.').pop().toLowerCase();
 
-        const extension = fileName.split('.').pop().toLowerCase();
-        let mimeType = 'image/jpeg'; // default
+        let mimeType = 'image/jpeg';
 
         if (extension === 'png') mimeType = 'image/png';
         else if (extension === 'gif') mimeType = 'image/gif';
@@ -142,28 +130,54 @@ const ReportScreen = () => {
         else if (extension === 'webp') mimeType = 'image/webp';
 
         formData.append('file', {
-            uri: photoUrl,
-            name: fileName,
-            type: mimeType
-        })
+            uri: `data:${mimeType};base64,${base64Data}`,
+            type: mimeType,
+            name: fileNameParam
+        });
         formData.append('upload_preset', 'TestTest');
 
-       try{
-           const response = await fetch(
-               'https://api.cloudinary.com/v1_1/divcq4r4c/upload',
-               {method: 'POST', body: formData}
-           );
-           const data = await response.json();
-           if (data.secure_url){
-               return data.secure_url;
-           }else{
-               console.log(data)
-               return null
-           }
-       }catch (error){
-           console.log(error)
-       }
-    }
+        try {
+            const response = await fetch('https://api.cloudinary.com/v1_1/divcq4r4c/upload', { method: 'POST', body: formData });
+            const data = await response.json();
+            return data.secure_url || null;
+        } catch (error) {
+            console.log(error);
+            return null;
+        }
+    };
+
+
+    useEffect(() => {
+        const syncReports = async () => {
+            if(!isConnected || !backendAvailable || !token) return
+
+            const unsyncedReports = await fetchUnsyncedReports()
+            if(unsyncedReports.length !== 0){
+                for(let report of unsyncedReports){
+                    try {
+                        const uploadedUrl = await handleUploadImage(report.photoBase64, generateFileName());
+                        if (!uploadedUrl) {
+                            alert("Не вдалося завантажити фото");
+                            return;
+                        }
+                        await createReport(
+                            {
+                                description: report.description,
+                                category: report.category,
+                                photoUrl: uploadedUrl,
+                                latitude: report.latitude,
+                                longitude: report.longitude
+                            },token
+                        )
+                        await markReportAsSynced(report.id)
+                    } catch (err) {
+                        console.log("sync fail")
+                    }
+                }
+            }
+        }
+        syncReports()
+    }, []);
 
     return (
         <View style={[styles.container, {backgroundColor: theme.background}]}>
