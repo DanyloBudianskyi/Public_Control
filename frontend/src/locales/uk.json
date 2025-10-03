@@ -50,7 +50,8 @@
       "userNotFound": "Користувач з таким email не знайдений",
       "invalidCredentials": "Невірний email або пароль",
       "generalError": "Помилка при вході",
-      "networkError": "Помилка мережі, спробуйте пізніше"
+      "networkError": "Помилка мережі, спробуйте пізніше",
+      "backendError": "Сервер недоступний, спробуйте пізніше"
     },
     "success": {
       "registrationTitle": "Успіх",
