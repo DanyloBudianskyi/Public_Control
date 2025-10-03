@@ -56,5 +56,20 @@
     "success": {
       "registrationTitle": "Success",
       "registration": "User successfully registered"
+    },
+    "alerts": {
+      "permissionRequiredTitle": "Permission required",
+      "permissionRequiredMessage": "Sorry, we need camera permissions to make this work! You can enable it in Settings.",
+      "error": "Error",
+      "loginRequired": "You need to login",
+      "fillAllFields": "Fill all fields",
+      "makePhoto": "Make a photo",
+      "locationNotAvailable": "Location not available yet",
+      "uploadFailed": "Failed to upload image",
+      "reportCreationFailed": "Failed to create report",
+      "success": "Success",
+      "reportSent": "Report sent to server",
+      "savedLocally": "Saved locally",
+      "willSendLater": "Will be sent when online"
     }
 }

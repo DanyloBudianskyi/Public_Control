@@ -10,6 +10,7 @@ import {AuthContext} from "../context/AuthContext";
 import {createReport} from "../api/reportApi";
 import {useNavigation} from "@react-navigation/native";
 import {ConnectionContext} from "../context/ConnectionContext";
+import Toast from "react-native-toast-message";
 
 const generateFileName = () => {
     const timestamp = Date.now();
@@ -42,11 +43,11 @@ const ReportScreen = () => {
         const permission = await ImagePicker.requestCameraPermissionsAsync()
         if(!permission.granted){
             Alert.alert(
-                'Permission required',
-                'Sorry, we need camera permissions to make this work! You can enable it in Settings.',
+                t('alerts.permissionRequiredTitle'),
+                t('alerts.permissionRequiredMessage'),
                 [
-                    { text: 'Cancel', style: 'cancel' },
-                    { text: 'Open Settings', onPress: () => Linking.openSettings() }
+                    { text: t('buttons.cancel'), style: 'cancel' },
+                    { text: t('buttons.openSettings'), onPress: () => Linking.openSettings() }
                 ]
             );
             return;
@@ -70,15 +71,15 @@ const ReportScreen = () => {
             return;
         }
         if(!description || !category){
-            alert("Fill all fields")
+            Alert.alert(t('alerts.error'), t('alerts.fillAllFields'))
             return
         }
         if(!photoBase64){
-            alert("Make a photo")
+            Alert.alert(t('alerts.error'), t('alerts.makePhoto'))
             return
         }
         if (!location) {
-            alert("Location not available yet")
+            Alert.alert(t('alerts.error'), errorMsg || t('alerts.locationNotAvailable'))
             return
         }
         const latitude = location.coords.latitude
@@ -88,7 +89,7 @@ const ReportScreen = () => {
             if(isConnected && backendAvailable && token){
                 const uploadedUrl = await handleUploadImage(photoBase64, generateFileName());
                 if (!uploadedUrl) {
-                    alert("Не вдалося завантажити фото");
+                    Alert.alert(t('alerts.error'), t('alerts.uploadFailed'));
                     return;
                 }
 
@@ -98,6 +99,18 @@ const ReportScreen = () => {
                 )
 
                 await markReportAsSynced(localReportId);
+
+                Toast.show({
+                    type: 'success',
+                    text1: t('alerts.success'),
+                    text2: t('alerts.reportSent')
+                })
+            } else {
+                Toast.show({
+                    type: 'info',
+                    text1: t('alerts.savedLocally'),
+                    text2: t('alerts.willSendLater')
+                })
             }
 
             setDescription('');
@@ -113,7 +126,7 @@ const ReportScreen = () => {
         } catch (e){
             console.log("token:", token)
             console.log(">>>>>>>>>>>", e)
-            Alert.alert('Помилка', 'Не владося створит пост')
+            Alert.alert(t('alerts.error'), t('alerts.reportCreationFailed'))
         }
     }
 
@@ -156,7 +169,7 @@ const ReportScreen = () => {
                     try {
                         const uploadedUrl = await handleUploadImage(report.photoBase64, generateFileName());
                         if (!uploadedUrl) {
-                            alert("Не вдалося завантажити фото");
+                            Alert.alert(t('alerts.error'), t('alerts.uploadFailed'))
                             return;
                         }
                         await createReport(
@@ -180,7 +193,7 @@ const ReportScreen = () => {
 
     return (
         <View style={[styles.container, {backgroundColor: theme.background}]}>
-            <View>
+            <View style={{ flex: 1 }}>
                 <Text style={[styles.label, {color: theme.text}]}>{t('description')}:</Text>
                 <TextInput
                     value={description}
@@ -212,9 +225,11 @@ const ReportScreen = () => {
                     <Text style={{color: theme.text}}>{t('buttons.makePhoto')}</Text>
                 </TouchableOpacity>
                 {photoUrl &&
-                    <View style={{alignItems: 'center'}}>
-                        <Image source={{uri: photoUrl}} style={styles.image}/>
-                    </View>
+                    <Image
+                        source={{ uri: photoUrl }}
+                        style={styles.image}
+                        resizeMode="contain"
+                    />
                 }
             </View>
 
@@ -227,9 +242,7 @@ const ReportScreen = () => {
 
 const styles = StyleSheet.create({
     image: {
-        width: 200,
-        height: 200,
-        marginTop: 8
+        flex: 1,
     },
     container: {
         flex: 1,

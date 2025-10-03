@@ -4,7 +4,7 @@ const API_URL = 'http://192.168.1.71:3000'
 
 const axiosInstance = axios.create({
     baseURL: API_URL,
-    timeout: 5000
+    timeout: 3000,
 })
 
 export const getReports = () => axiosInstance.get('/reports')

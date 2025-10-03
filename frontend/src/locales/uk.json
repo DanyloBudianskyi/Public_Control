@@ -56,5 +56,20 @@
     "success": {
       "registrationTitle": "Успіх",
       "registration": "Користувача зареєстровано"
+    },
+    "alerts": {
+      "permissionRequiredTitle": "Потрібен дозвіл",
+      "permissionRequiredMessage": "Вибачте, нам потрібен доступ до камери для роботи! Ви можете ввімкнути його в налаштуваннях.",
+      "error": "Помилка",
+      "loginRequired": "Потрібно авторизуватись",
+      "fillAllFields": "Заповніть всі поля",
+      "makePhoto": "Зробити фото",
+      "locationNotAvailable": "Місцезнаходження поки недоступне",
+      "uploadFailed": "Не вдалося завантажити зображення",
+      "reportCreationFailed": "Не вдалося створити звіт",
+      "success": "Успіх",
+      "reportSent": "Звіт відправлено на сервер",
+      "savedLocally": "Збережено локально",
+      "willSendLater": "Буде відправлено при підключенні"
     }
 }
