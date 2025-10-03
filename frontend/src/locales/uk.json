@@ -70,6 +70,15 @@
       "success": "Успіх",
       "reportSent": "Звіт відправлено на сервер",
       "savedLocally": "Збережено локально",
-      "willSendLater": "Буде відправлено при підключенні"
+      "willSendLater": "Буде відправлено при підключенні",
+      "dataSynced": "Дані були синхронізовані"
+    },
+    "toast": {
+      "noInternetTitle": "Немає інтернету",
+      "noInternetMessage": "Додаток працює офлайн",
+      "backendUnavailableTitle": "Бекенд недоступний",
+      "backendUnavailableMessage": "Додаток працює офлайн",
+      "successTitle": "Успіх",
+      "successMessage": "Додаток успішно підключився до сервера"
     }
 }

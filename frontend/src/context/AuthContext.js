@@ -130,6 +130,7 @@ const AuthProvider = ({children}) => {
                 if (storedUser) {
                     setUser(JSON.parse(storedUser))
                 }
+                console.log(user)
             } catch (err) {
                 console.log("Error loading auth data", err)
             } finally {

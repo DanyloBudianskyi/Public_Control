@@ -103,13 +103,15 @@ const ReportScreen = () => {
                 Toast.show({
                     type: 'success',
                     text1: t('alerts.success'),
-                    text2: t('alerts.reportSent')
+                    text2: t('alerts.reportSent'),
+                    position: "bottom"
                 })
             } else {
                 Toast.show({
                     type: 'info',
                     text1: t('alerts.savedLocally'),
-                    text2: t('alerts.willSendLater')
+                    text2: t('alerts.willSendLater'),
+                    position: "bottom"
                 })
             }
 
@@ -186,6 +188,12 @@ const ReportScreen = () => {
                         console.log("sync fail", err);
                     }
                 }
+                Toast.show({
+                    type: 'success',
+                    text1: t('alerts.success'),
+                    text2: t('alerts.dataSynced'),
+                    position: "bottom"
+                })
             }
         }
         syncReports()

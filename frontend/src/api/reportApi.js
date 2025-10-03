@@ -9,7 +9,12 @@ const axiosInstance = axios.create({
 
 export const getReports = () => axiosInstance.get('/reports')
 export const getReportById = (id) => axiosInstance.get(`/reports/${id}`)
-export const getReportsByUserId = (userId) => axiosInstance.get(`/reports/user/${userId}`)
+export const getReportsByUserId = (token) =>
+    axiosInstance.get(`/reports/me`, {
+    headers: {
+        Authorization: `Bearer ${token}`
+    }
+})
 export const getReportsByDate = (date) => axiosInstance.get(`/reports/date/${date}`)
 export const createReport = (report, token) =>
     axiosInstance.post('/reports', report, {

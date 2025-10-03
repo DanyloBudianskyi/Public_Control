@@ -70,6 +70,15 @@
       "success": "Success",
       "reportSent": "Report sent to server",
       "savedLocally": "Saved locally",
-      "willSendLater": "Will be sent when online"
+      "willSendLater": "Will be sent when online",
+      "dataSynced": "Data was synced"
+    },
+    "toast": {
+      "noInternetTitle": "No Internet",
+      "noInternetMessage": "App is working offline",
+      "backendUnavailableTitle": "Backend unavailable",
+      "backendUnavailableMessage": "App is working offline",
+      "successTitle": "Success",
+      "successMessage": "App successfully connected to the server"
     }
 }
