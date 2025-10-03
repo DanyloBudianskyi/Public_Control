@@ -46,7 +46,11 @@
       "invalidEmail": "Email має бути валідним",
       "shortPassword": "Пароль має бути щонайменше 6 символів",
       "passwordMismatch": "Паролі не співпадають",
-      "general": "Реєстрація не вдалася"
+      "general": "Реєстрація не вдалася",
+      "userNotFound": "Користувач з таким email не знайдений",
+      "invalidCredentials": "Невірний email або пароль",
+      "generalError": "Помилка при вході",
+      "networkError": "Помилка мережі, спробуйте пізніше"
     },
     "success": {
       "registrationTitle": "Успіх",

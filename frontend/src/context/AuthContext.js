@@ -17,7 +17,7 @@ const AuthProvider = ({children}) => {
         try {
             const res = await axios.post('http://192.168.1.71:3000/register', {
                 email, name, lastName,  password
-            })
+            }, {timeout: 5000})
 
             const token = res.data.token;
             const userData = res.data.user || { email, name, lastName };
@@ -49,6 +49,9 @@ const AuthProvider = ({children}) => {
                     throw new Error(messages.join('\n'));
                 }
             }
+            else {
+                throw new Error(t('errors.networkError'))
+            }
 
             throw new Error(t('errors.general'));
         }
@@ -58,7 +61,7 @@ const AuthProvider = ({children}) => {
         try {
             const res = await axios.post('http://192.168.1.71:3000/login', {
                 email, password
-            })
+            }, {timeout: 5000})
 
             const token = res.data.token;
             const userData = res.data.user;
@@ -71,8 +74,22 @@ const AuthProvider = ({children}) => {
             await AsyncStorage.setItem("userData", JSON.stringify(userData));
 
             Alert.alert('Успіх', 'Ви увійшли')
-        } catch (e) {
-            Alert.alert('Помилка', 'Логін не вдалося')
+        } catch (err) {
+            if (err.response) {
+                const status = err.response.status
+                const message = err.response.data?.message
+
+                if (status === 404) {
+                    throw new Error(t('errors.userNotFound'))
+                } else if (status === 401) {
+                    throw new Error(t('errors.invalidCredentials'))
+                } else {
+                    throw new Error(t('errors.generalError'))
+                }
+
+            } else {
+                throw new Error(t('errors.networkError'))
+            }
         }
     }
 

@@ -13,6 +13,7 @@ const LoginScreen = () => {
     const [password, setPassword] = useState('')
     const navigation = useNavigation()
     const {login} = useContext(AuthContext)
+    const [errorMsg, setErrorMsg] = useState('')
 
     const handlePress = async () => {
         try {
@@ -22,7 +23,7 @@ const LoginScreen = () => {
                 routes: [{ name: 'Home' }]
             })
         } catch (err) {
-            console.log(err.message || "login failed")
+            setErrorMsg(err.message)
         }
     }
     return(
@@ -43,6 +44,7 @@ const LoginScreen = () => {
                 onChangeText={setPassword}
                 secureTextEntry
             />
+            {errorMsg && <Text style={{color: 'red', marginBottom: 8, fontWeight: "bold"}}>{errorMsg}</Text>}
             <TouchableOpacity onPress={() => navigation.navigate('Register')}>
                 <Text style={[styles.link, {color: theme.text}]}>{t('form.registerLink')} <Text style={styles.linkHighlight}>{t('form.buttonRegister')}</Text></Text>
             </TouchableOpacity>

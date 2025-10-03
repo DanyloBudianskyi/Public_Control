@@ -46,7 +46,11 @@
       "invalidEmail": "Email must be valid",
       "shortPassword": "Password must be at least 6 characters",
       "passwordMismatch": "Passwords do not match",
-      "general": "Registration failed"
+      "general": "Registration failed",
+      "userNotFound": "User with this email not found",
+      "invalidCredentials": "Invalid email or password",
+      "generalError": "Login failed",
+      "networkError": "Network error, please try again later"
     },
     "success": {
       "registrationTitle": "Success",
