@@ -1,18 +1,19 @@
 import {View, Text, StyleSheet, FlatList} from "react-native";
 import useCurrentLocation from "../hooks/useCurrentLocation";
-import MapView, {Marker} from "react-native-maps";
+import MapView, {Callout, Marker} from "react-native-maps";
 import {useEffect, useState} from "react";
 import {fetchReports} from "../database";
 import {getReports} from "../api/reportApi";
+import {useTranslation} from "react-i18next";
 
 const MapScreen = () => {
     const {location, errorMsg, loading} = useCurrentLocation()
     const [reports, setReports] = useState([])
+    const {t} = useTranslation()
 
     useEffect(() => {
         const fetchData = async  () => {
             const res = await getReports()
-            console.log(res.data)
             setReports(res.data)
         }
         fetchData()
@@ -31,7 +32,12 @@ const MapScreen = () => {
                     }}
                 >
                     {reports.map(item => (
-                        <Marker key={item.id} coordinate={{latitude: item.latitude, longitude: item.longitude}}/>
+                        <Marker
+                            key={item.id}
+                            coordinate={{latitude: item.latitude, longitude: item.longitude}}
+                            title={t(`reports.${item.category}`)}
+                            description={item.description}
+                        />
                     ))}
                 </MapView>
             )}
