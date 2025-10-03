@@ -170,7 +170,7 @@ const ReportScreen = () => {
                         )
                         await markReportAsSynced(report.id)
                     } catch (err) {
-                        console.log("sync fail")
+                        console.log("sync fail", err);
                     }
                 }
             }

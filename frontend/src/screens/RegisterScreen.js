@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native"
-import {useContext, useState} from "react"
+import {useContext, useEffect, useState} from "react"
 import {StyleSheet, Text, TextInput, TouchableOpacity, View} from "react-native"
 import {AuthContext} from "../context/AuthContext";
 import {ThemeContext} from  "../context/ThemeContext";
@@ -16,9 +16,11 @@ const RegisterScreen = () => {
     const [confirm, setConfirm] = useState('')
     const navigation = useNavigation()
     const {register} = useContext(AuthContext)
+    const [errorMsg, setErrorMsg] = useState('')
 
     const handlePress = async () => {
         if (password !== confirm) {
+            setErrorMsg(t('errors.passwordMismatch'))
             return
         }
         try {
@@ -28,7 +30,7 @@ const RegisterScreen = () => {
                 routes: [{ name: 'Home' }]
             })
         } catch (err) {
-            console.log(err.message || "Registration failed")
+            setErrorMsg(err.message)
         }
     }
 
@@ -72,6 +74,7 @@ const RegisterScreen = () => {
                 placeholder={t('form.confirmPassword')}
                 secureTextEntry
             />
+            {errorMsg && <Text style={{color: 'red', marginBottom: 8, fontWeight: "bold"}}>{errorMsg}</Text>}
             <TouchableOpacity onPress={() => navigation.replace('Login')}>
                 <Text style={[styles.link, {color: theme.text}]}>{t('form.loginLink')} <Text style={styles.linkHighlight}>{t('form.buttonLogin')}</Text></Text>
             </TouchableOpacity>

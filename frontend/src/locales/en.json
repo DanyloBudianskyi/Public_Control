@@ -40,5 +40,16 @@
       "headerRegister": "Register",
       "buttonRegister": "Register",
       "registerLink": "Don't have an account?"
+    },
+    "errors": {
+      "emailExists": "A user with this email already exists",
+      "invalidEmail": "Email must be valid",
+      "shortPassword": "Password must be at least 6 characters",
+      "passwordMismatch": "Passwords do not match",
+      "general": "Registration failed"
+    },
+    "success": {
+      "registrationTitle": "Success",
+      "registration": "User successfully registered"
     }
 }
