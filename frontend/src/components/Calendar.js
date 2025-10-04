@@ -1,16 +1,36 @@
-import { useContext, useState } from "react"
+import {useContext, useEffect, useState} from "react"
 import { StyleSheet, View, Text, FlatList } from "react-native"
 import Day from "./Day"
 import Header from "./Header"
 import {ThemeContext} from  "../context/ThemeContext"
 import {useNavigation} from "@react-navigation/native";
 import {useTranslation} from "react-i18next";
+import {getReportsDates} from "../api/reportApi";
+import Toast from "react-native-toast-message";
 
 const Calendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date())
     const {theme} = useContext(ThemeContext)
     const {t} = useTranslation()
     const navigation = useNavigation()
+    const [dates, setDates] = useState([])
+
+    useEffect(() => {
+        const fetchDates = async () => {
+            try {
+                const res = await getReportsDates()
+                setDates(res.data)
+            }catch (err){
+                Toast.show({
+                    type: "error",
+                    text1: t("alerts.error"),
+                    text2: "Не удалось загрузить даты преступлений",
+                    position: "bottom"
+                })
+            }
+        }
+        fetchDates()
+    }, []);
 
     const weekDays = t("weekDays" , {returnObjects: true})
     const firstDayOfWeek = t("firstDayOfWeek");
@@ -64,6 +84,7 @@ const Calendar = () => {
     }
 
 
+
     return(
         <View style={styles.container}>
             <View style={styles.calendarWrapper}>
@@ -75,17 +96,20 @@ const Calendar = () => {
                 </View>
                 <FlatList
                     data={days}
-                    renderItem={({ item }) => (
+                    renderItem={({ item }) => {
+                        const formatedDate = formatDate(item)
+                        const hasViolation = dates.includes(formatedDate)
+                        return(
                         <Day 
-                        day={item} 
-                        isToday={item.toDateString() === currentDate.toDateString()}
-                        isCurrentMonth={item.getMonth() === currentDate.getMonth()}
-                        onPress={() => {
-                            const formatedDate = formatDate(item)
-                            navigation.navigate("Info", {selectedDate: formatedDate})
-                        }}
-                        />
-                    )}
+                            day={item}
+                            isToday={item.toDateString() === currentDate.toDateString()}
+                            isCurrentMonth={item.getMonth() === currentDate.getMonth()}
+                            hasViolation={hasViolation}
+                            onPress={() => {
+                                navigation.navigate("Info", {selectedDate: formatedDate})
+                            }}
+                        />)
+                    }}
                     keyExtractor={(item, index) => index.toString()}
                     numColumns={7}
                     scrollEnabled={false}

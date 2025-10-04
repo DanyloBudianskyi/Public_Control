@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native"
 import { useContext } from "react"
 import {ThemeContext} from  "../context/ThemeContext"
 
-const Day = ({day, isToday, isCurrentMonth, onPress}) => {
+const Day = ({day, isToday, isCurrentMonth, onPress, hasViolation}) => {
     const {theme} = useContext(ThemeContext)
 
     return(
@@ -12,6 +12,7 @@ const Day = ({day, isToday, isCurrentMonth, onPress}) => {
                 isCurrentMonth ? {color: theme.text} : styles.other,
                 isToday ? styles.Today : null,
             ]}>{day.getDate()}</Text>
+            {hasViolation && <Text style={styles.dot}>•</Text>}
         </TouchableOpacity>
     )
 }
@@ -34,7 +35,13 @@ const styles = StyleSheet.create({
     },
     other: {
         color: 'gray'
-    }
+    },
+    dot: {
+        fontSize: 12,
+        color: "red",
+        position: "absolute",
+        bottom: 4,
+    },
 })
 
 export default Day

@@ -11,11 +11,12 @@ export const getReports = () => axiosInstance.get('/reports')
 export const getReportById = (id) => axiosInstance.get(`/reports/${id}`)
 export const getReportsByUserId = (token) =>
     axiosInstance.get(`/reports/me`, {
-    headers: {
-        Authorization: `Bearer ${token}`
-    }
-})
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
 export const getReportsByDate = (date) => axiosInstance.get(`/reports/date/${date}`)
+export const getReportsDates = () => axiosInstance.get(`/reports/dates`)
 export const createReport = (report, token) =>
     axiosInstance.post('/reports', report, {
         headers: {

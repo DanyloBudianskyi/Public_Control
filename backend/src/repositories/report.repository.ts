@@ -41,4 +41,36 @@ export class ReportRepository{
     async delete(id: string): Promise<ReportDocument | null>{
         return ReportModel.findByIdAndDelete(id, {projection: {__v: 0}}).populate("userId", "name lastName").exec();
     }
+
+    async getAllReportDates(): Promise<string[]> {
+        const dates = await ReportModel.aggregate([
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$createdAt" },
+                        month: { $month: "$createdAt" },
+                        day: { $dayOfMonth: "$createdAt" }
+                    }
+                }
+            },
+            {
+                $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 }
+            },
+            {
+                $project: {
+                    _id: 0,
+                    date: {
+                        $dateFromParts: {
+                            year: "$_id.year",
+                            month: "$_id.month",
+                            day: "$_id.day"
+                        }
+                    }
+                }
+            }
+        ]);
+
+        return dates.map(d => d.date.toISOString().split("T")[0]);
+    }
+
 }

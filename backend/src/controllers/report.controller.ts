@@ -65,4 +65,9 @@ export class ReportController{
         await this.reportService.deleteById(id);
         ctx.status = 204;
     }
+
+    async getAllReportDates(ctx: Context) {
+        const dates = await this.reportService.getAllReportDates();
+        ctx.body = dates;
+    }
 }

@@ -49,6 +49,10 @@ export class ReportService {
         const report = await this.reportRepository.delete(id);
         if (!report) throw new NotFoundError(`Report with id "${id}" not found`);
     }
+
+    async getAllReportDates(): Promise<string[]> {
+        return this.reportRepository.getAllReportDates();
+    }
 }
 
 function toReportResponseDto(report: ReportDocument): ReportResponseDto {
