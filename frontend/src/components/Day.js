@@ -21,14 +21,14 @@ const styles = StyleSheet.create({
     Today: {
         backgroundColor: "#5c5c5c",
         fontWeight: "800",
-        color: "white"
+        color: "white",
     },
     day: {
         width: 40,
         height: 40,
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: 20,
+
     },
     text: {
         padding: 10,
