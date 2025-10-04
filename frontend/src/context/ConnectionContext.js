@@ -12,22 +12,35 @@ const ConnectionProvider = ({children}) => {
     const {t} = useTranslation()
 
     useEffect(() => {
-        const checkConnection = async () => {
-            const state = await NetInfo.fetch()
-            setIsConnected(state.isConnected)
-            if(!state){
+        const interval = setInterval(async () => {
+            const state = await NetInfo.fetch();
+            setIsConnected(state.isConnected);
+
+            if (!state.isConnected) {
+                setBackendAvailable(false);
                 Toast.show({
                     type: "error",
                     text1: t('toast.noInternetTitle'),
                     text2: t('toast.noInternetMessage'),
                     position: "bottom"
-                })
-                return
+                });
+                return;
             }
+
             try {
                 const backendOk = await pingBackend();
-                setBackendAvailable(backendOk);
-                if (!backendOk) {
+                if (backendOk !== backendAvailable) { // показываем тост только при изменении
+                    setBackendAvailable(backendOk);
+                    Toast.show({
+                        type: backendOk ? "success" : "error",
+                        text1: backendOk ? t('toast.successTitle') : t('toast.backendUnavailableTitle'),
+                        text2: backendOk ? t('toast.successMessage') : t('toast.backendUnavailableMessage'),
+                        position: "bottom"
+                    });
+                }
+            } catch (err) {
+                if (backendAvailable) {
+                    setBackendAvailable(false);
                     Toast.show({
                         type: "error",
                         text1: t('toast.backendUnavailableTitle'),
@@ -35,24 +48,12 @@ const ConnectionProvider = ({children}) => {
                         position: "bottom"
                     });
                 }
-                if(state && backendOk){
-                    Toast.show({
-                        type: "success",
-                        text1: t('toast.successTitle'),
-                        text2: t('toast.successMessage'),
-                        position: "bottom"
-                    });
-                }
-            }catch (err){
-                setBackendAvailable(false);
-                Toast.show({
-                    type: "error",
-                    text1: "Ошибка при проверке бэкенда",
-                });
             }
-        }
-        checkConnection()
-    }, []);
+        }, 15000);
+
+        return () => clearInterval(interval);
+    }, [backendAvailable, t]);
+
 
     return(
         <ConnectionContext.Provider value={{ isConnected, backendAvailable }}>
