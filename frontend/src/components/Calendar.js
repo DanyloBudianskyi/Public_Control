@@ -88,66 +88,75 @@ const Calendar = () => {
     return(
         <View style={styles.container}>
             <View style={styles.calendarWrapper}>
-                <Header currentDay={currentDate} setCurrentDay={setCurrentDate}/>
-                <View style={styles.weekDay}>
-                        {weekDays.map((day, index) => (
-                    <Text key={index} style={[styles.weekdayText, {color: theme.text}]}>{day}</Text>
-                ))}
+                <View style={styles.headerWrapper}>
+                    <Header currentDay={currentDate} setCurrentDay={setCurrentDate}/>
                 </View>
-                <FlatList
-                    data={days}
-                    renderItem={({ item }) => {
+
+                <View style={styles.weekDay}>
+                    {weekDays.map((day, index) => (
+                        <Text key={index} style={[styles.weekdayText, {color: theme.text}]}>{day}</Text>
+                    ))}
+                </View>
+
+                <View style={styles.daysWrapper}>
+                    {days.map((item, index) => {
                         const formatedDate = formatDate(item)
                         const hasViolation = dates.includes(formatedDate)
-                        return(
-                        <Day 
-                            day={item}
-                            isToday={item.toDateString() === currentDate.toDateString()}
-                            isCurrentMonth={item.getMonth() === currentDate.getMonth()}
-                            hasViolation={hasViolation}
-                            onPress={() => {
-                                navigation.navigate("Info", {selectedDate: formatedDate})
-                            }}
-                        />)
-                    }}
-                    keyExtractor={(item, index) => index.toString()}
-                    numColumns={7}
-                    scrollEnabled={false}
-                    key={currentDate.getMonth()}
-                />
+                        return (
+                            <Day
+                                key={index}
+                                day={item}
+                                isToday={item.toDateString() === currentDate.toDateString()}
+                                isCurrentMonth={item.getMonth() === currentDate.getMonth()}
+                                hasViolation={hasViolation}
+                                onPress={() => navigation.navigate("Info", {selectedDate: formatedDate})}
+                            />
+                        )
+                    })}
+                </View>
             </View>
+
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-  week: {
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-  },
-  weekDay: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    
-  },
-  weekdayText: {
-    textAlign: 'center',
-    fontWeight: '600',
-    fontSize: 16,
-    width: 40,
-    height: 40,
-  },
-
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: "100%",
-  },
-  calendarWrapper: {
-    flex: 1,
-    paddingHorizontal: 10,
-    width: 320,
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        width: "100%",
+        paddingVertical: 20,
+    },
+    calendarWrapper: {
+        width: 340,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 12,
+        padding: 10,
+    },
+    headerWrapper: {
+        marginBottom: 10,
+        alignItems: "center",
+    },
+    weekDay: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 5,
+        borderBottomWidth: 1,
+        borderBottomColor: "#eee",
+        paddingBottom: 5,
+    },
+    weekdayText: {
+        fontWeight: '700',
+        fontSize: 14,
+        textAlign: 'center',
+        width: 40,
+        color: "#333",
+    },
+    daysWrapper: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
     },
 })
 

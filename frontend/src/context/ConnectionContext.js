@@ -29,7 +29,7 @@ const ConnectionProvider = ({children}) => {
 
             try {
                 const backendOk = await pingBackend();
-                if (backendOk !== backendAvailable) { // показываем тост только при изменении
+                if (backendOk !== backendAvailable) {
                     setBackendAvailable(backendOk);
                     Toast.show({
                         type: backendOk ? "success" : "error",

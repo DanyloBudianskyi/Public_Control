@@ -43,34 +43,18 @@ export class ReportRepository{
     }
 
     async getAllReportDates(): Promise<string[]> {
-        const dates = await ReportModel.aggregate([
-            {
-                $group: {
-                    _id: {
-                        year: { $year: "$createdAt" },
-                        month: { $month: "$createdAt" },
-                        day: { $dayOfMonth: "$createdAt" }
-                    }
-                }
-            },
-            {
-                $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 }
-            },
-            {
-                $project: {
-                    _id: 0,
-                    date: {
-                        $dateFromParts: {
-                            year: "$_id.year",
-                            month: "$_id.month",
-                            day: "$_id.day"
-                        }
-                    }
-                }
-            }
-        ]);
+        const reports = await ReportModel.find({}, { createdAt: 1 }).exec();
 
-        return dates.map(d => d.date.toISOString().split("T")[0]);
+        const datesSet = new Set<string>();
+
+        reports.forEach(r => {
+            const dt = DateTime.fromJSDate(r.createdAt, { zone: 'America/Denver' });
+            const dateStr = dt.toFormat('yyyy-MM-dd');
+            datesSet.add(dateStr);
+        });
+
+        return Array.from(datesSet).sort((a, b) => a.localeCompare(b));
     }
+
 
 }
