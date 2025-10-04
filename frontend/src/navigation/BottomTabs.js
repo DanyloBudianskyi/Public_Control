@@ -6,6 +6,7 @@ import { useContext } from "react";
 import {ThemeContext} from  "../context/ThemeContext";
 import { useTranslation } from 'react-i18next';
 import { AuthContext } from '../context/AuthContext';
+import { Ionicons } from '@expo/vector-icons';
 import CalendarStack from "./CalendarStack";
 
 const BottomTab = createBottomTabNavigator()
@@ -30,18 +31,33 @@ const BottomTabs = () => {
             <BottomTab.Screen 
                 name="CalendarMain"
                 component={CalendarStack}
-                options={{tabBarLabel: t('calendar')}}
+                options={{
+                    tabBarLabel: t('calendar'),
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="calendar-outline" size={size} color={color} />
+                    )
+            }}
                 />
             <BottomTab.Screen 
                 name="Map" 
                 component={MapScreen}
-                options={{tabBarLabel: t('map')}}
+                options={{
+                    tabBarLabel: t('map'),
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="map-outline" size={size} color={color} />
+                    )
+            }}
                 />
             {isLoggedIn && 
             <BottomTab.Screen 
                 name="Report"
                 component={ReportScreen}
-                options={{tabBarLabel: t('report')}}
+                options={{
+                    tabBarLabel: t('report'),
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="document-text-outline" size={size} color={color} />
+                    )
+            }}
             />}
         </BottomTab.Navigator>
     )
